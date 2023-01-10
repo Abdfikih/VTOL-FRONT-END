@@ -40,6 +40,12 @@
       "react-app/jest"
     ]
   },
+  "engines": {
+    "npm": ">=8.7.0"
+  },
+  "overrides": {
+    "react": "$react"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
