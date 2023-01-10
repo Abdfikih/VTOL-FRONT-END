@@ -110,7 +110,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        "https://vtol-cigritous-backend.herokuapp.com/api/drone"
+        "https://back-end-vtol-ex.vercel.app/api/drone"
       );
       setData(response.data);
       let lastElement = response.data.slice(-1)[0];
