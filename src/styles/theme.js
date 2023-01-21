@@ -13,7 +13,7 @@ const theme = createTheme({
   },
   typography: {
     allVariants: {
-      fontFamily: "Robot,sans-serif",
+      fontFamily: "Robot,poppins",
       textTransform: "none",
     },
   },

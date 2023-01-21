@@ -4,6 +4,8 @@ import theme from "./styles/theme";
 import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Home from "./pages/Home";
+import Settings from "./pages/Settings";
+import Controls from "./pages/Controls";
 
 const App = () => {
   return (
@@ -11,6 +13,9 @@ const App = () => {
       <CssBaseline />
       <Routes>
         <Route path="/" element={<Home />} exact />
+        <Route path="/Settings" element={<Settings />} exact />
+        <Route path="/Controls" element={<Controls />} exact />
+	<Route path="*" element={<Home />} exact />
       </Routes>
     </ThemeProvider>
   );
