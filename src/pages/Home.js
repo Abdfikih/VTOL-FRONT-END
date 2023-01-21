@@ -12,7 +12,7 @@ import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import Button from "@mui/material/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
-import mqtt from "mqtt/dist/mqtt";
+// import mqtt from "mqtt/dist/mqtt";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -103,50 +103,50 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const [centralTemp, setCentralTemp] = useState("");
-  const [centralPress, setCentralPress] = useState("");
-  const [centralHumid, setCentralHumid] = useState("");
-  const [centralGas, setCentralGas] = useState("");
-  const [nodeTemp, setNodeTemp] = useState("");
-  const [nodeHumid, setNodeHumid] = useState("");
-  const [nodeMoist, setNodeMoist] = useState("");
+  // const [centralTemp, setCentralTemp] = useState("");
+  // const [centralPress, setCentralPress] = useState("");
+  // const [centralHumid, setCentralHumid] = useState("");
+  // const [centralGas, setCentralGas] = useState("");
+  // const [nodeTemp, setNodeTemp] = useState("");
+  // const [nodeHumid, setNodeHumid] = useState("");
+  // const [nodeMoist, setNodeMoist] = useState("");
 
-  useEffect(() => {
-    const client = mqtt.connect("mqtt://cbobzrgp:CKvOQLxrtuqc@driver.cloudmqtt.com:18789");
+  // useEffect(() => {
+  //   const client = mqtt.connect("mqtt://localhost:1883");
 
-    client.on("connect", () => {
-      console.log("MQTT client connected to the server.");
-      client.subscribe("central/temp");
-      client.subscribe("central/press");
-      client.subscribe("central/humid");
-      client.subscribe("central/gas");
-      client.subscribe("node/temp");
-      client.subscribe("node/humid");
-      client.subscribe("node/moist");
-    });
+  //   client.on("connect", () => {
+  //     console.log("MQTT client connected to the server.");
+  //     client.subscribe("central/temp");
+  //     client.subscribe("central/press");
+  //     client.subscribe("central/humid");
+  //     client.subscribe("central/gas");
+  //     client.subscribe("node/temp");
+  //     client.subscribe("node/humid");
+  //     client.subscribe("node/moist");
+  //   });
 
-    client.on("message", (topic, message) => {
-      if (topic === "central/temp") {
-        setCentralTemp(message.toString());
-      } else if (topic === "central/press") {
-        setCentralPress(message.toString());
-      } else if (topic === "central/humid") {
-        setCentralHumid(message.toString());
-      } else if (topic === "central/gas") {
-        setCentralGas(message.toString());
-      } else if (topic === "node/temp") {
-        setNodeTemp(message.toString());
-      } else if (topic === "node/humid") {
-        setNodeHumid(message.toString());
-      } else if (topic === "node/moist") {
-        setNodeMoist(message.toString());
-      }
-    });
+  //   client.on("message", (topic, message) => {
+  //     if (topic === "central/temp") {
+  //       setCentralTemp(message.toString());
+  //     } else if (topic === "central/press") {
+  //       setCentralPress(message.toString());
+  //     } else if (topic === "central/humid") {
+  //       setCentralHumid(message.toString());
+  //     } else if (topic === "central/gas") {
+  //       setCentralGas(message.toString());
+  //     } else if (topic === "node/temp") {
+  //       setNodeTemp(message.toString());
+  //     } else if (topic === "node/humid") {
+  //       setNodeHumid(message.toString());
+  //     } else if (topic === "node/moist") {
+  //       setNodeMoist(message.toString());
+  //     }
+  //   });
 
-    return () => {
-      client.end();
-    };
-  }, []);
+  //   return () => {
+  //     client.end();
+  //   };
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -379,7 +379,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">{centralTemp} °C</Typography>
+                  <Typography variant="h4"> 11 °C</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -404,7 +404,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">{centralPress}</Typography>
+                  <Typography variant="h4">50</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -428,7 +428,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">{centralHumid}</Typography>
+                  <Typography variant="h4">20</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -452,7 +452,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">{centralGas}</Typography>
+                  <Typography variant="h4"> 20 </Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -475,7 +475,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">{nodeTemp} °C</Typography>
+                  <Typography variant="h4">30 °C</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -498,7 +498,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">{nodeHumid}</Typography>
+                  <Typography variant="h4"> 30 </Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -521,7 +521,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">{nodeMoist}</Typography>
+                  <Typography variant="h4">40</Typography>
                 </CardContent>
               </Card>
             </Grid>
