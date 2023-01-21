@@ -12,7 +12,21 @@ import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import Button from "@mui/material/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import mqtt from "mqtt/dist/mqtt";
+import mqtt from "mqtt/dist/mqtt";
+
+var options = {
+  port: 18789,
+  // host: "mqtt://driver.cloudmqtt.com",
+  clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
+  username: 'cbobzrgp',
+  password: 'CKvOQLxrtuqc',
+  // keepalive: 60,
+  // reconnectPeriod: 1000,
+  // protocolId: 'MQIsdp',
+  // protocolVersion: 3,
+  // clean: true,
+  // encoding: 'utf8'
+};
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -103,50 +117,55 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // const [centralTemp, setCentralTemp] = useState("");
-  // const [centralPress, setCentralPress] = useState("");
-  // const [centralHumid, setCentralHumid] = useState("");
-  // const [centralGas, setCentralGas] = useState("");
-  // const [nodeTemp, setNodeTemp] = useState("");
-  // const [nodeHumid, setNodeHumid] = useState("");
-  // const [nodeMoist, setNodeMoist] = useState("");
+  const [centralTemp, setCentralTemp] = useState("");
+  const [centralPress, setCentralPress] = useState("");
+  const [centralHumid, setCentralHumid] = useState("");
+  const [centralGas, setCentralGas] = useState("");
+  const [nodeTemp, setNodeTemp] = useState("");
+  const [nodeHumid, setNodeHumid] = useState("");
+  const [nodeMoist, setNodeMoist] = useState("");
 
-  // useEffect(() => {
-  //   const client = mqtt.connect("mqtt://localhost:1883");
+  useEffect(() => {
+    const client = mqtt.connect("mqtt://driver.cloudmqtt.com", options);
 
-  //   client.on("connect", () => {
-  //     console.log("MQTT client connected to the server.");
-  //     client.subscribe("central/temp");
-  //     client.subscribe("central/press");
-  //     client.subscribe("central/humid");
-  //     client.subscribe("central/gas");
-  //     client.subscribe("node/temp");
-  //     client.subscribe("node/humid");
-  //     client.subscribe("node/moist");
-  //   });
+    client.on("connect", () => {
+      console.log("MQTT client connected to the server.");
+      client.subscribe("central/temp");
+      client.subscribe("central/press");
+      client.subscribe("central/humid");
+      client.subscribe("central/gas");
+      console.log("tes");
+      console.log(centralTemp);
+      client.subscribe("node/temp");
+      client.subscribe("node/humid");
+      client.subscribe("node/moist");
+    });
 
-  //   client.on("message", (topic, message) => {
-  //     if (topic === "central/temp") {
-  //       setCentralTemp(message.toString());
-  //     } else if (topic === "central/press") {
-  //       setCentralPress(message.toString());
-  //     } else if (topic === "central/humid") {
-  //       setCentralHumid(message.toString());
-  //     } else if (topic === "central/gas") {
-  //       setCentralGas(message.toString());
-  //     } else if (topic === "node/temp") {
-  //       setNodeTemp(message.toString());
-  //     } else if (topic === "node/humid") {
-  //       setNodeHumid(message.toString());
-  //     } else if (topic === "node/moist") {
-  //       setNodeMoist(message.toString());
-  //     }
-  //   });
+    client.on("message", (topic, message) => {
 
-  //   return () => {
-  //     client.end();
-  //   };
-  // }, []);
+      console.log("tessss");
+      console.log(centralGas);
+      if (topic === "central/temp") {
+        setCentralTemp(message.toString());
+      } else if (topic === "central/press") {
+        setCentralPress(message.toString());
+      } else if (topic === "central/humid") {
+        setCentralHumid(message.toString());
+      } else if (topic === "central/gas") {
+        setCentralGas(message.toString());
+      } else if (topic === "node/temp") {
+        setNodeTemp(message.toString());
+      } else if (topic === "node/humid") {
+        setNodeHumid(message.toString());
+      } else if (topic === "node/moist") {
+        setNodeMoist(message.toString());
+      }
+    });
+
+    return () => {
+      client.end();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -379,7 +398,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4"> 11 °C</Typography>
+                  <Typography variant="h4">{centralTemp} °C</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -404,7 +423,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">50</Typography>
+                  <Typography variant="h4">{centralPress}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -428,7 +447,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">20</Typography>
+                  <Typography variant="h4">{centralHumid}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -452,7 +471,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4"> 20 </Typography>
+                  <Typography variant="h4">{centralGas}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -475,7 +494,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">30 °C</Typography>
+                  <Typography variant="h4">{nodeTemp} °C</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -498,7 +517,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4"> 30 </Typography>
+                  <Typography variant="h4">{nodeHumid}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -521,7 +540,7 @@ const Home = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography variant="h4">40</Typography>
+                  <Typography variant="h4">{nodeMoist}</Typography>
                 </CardContent>
               </Card>
             </Grid>
