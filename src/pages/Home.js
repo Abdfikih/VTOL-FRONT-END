@@ -15,7 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import mqtt from "mqtt/dist/mqtt";
 
 var options = {
-  port: 18789,
+  port:38789,
   host: "wss://driver.cloudmqtt.com",
   clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
   username: 'cbobzrgp',
@@ -126,7 +126,7 @@ const Home = () => {
   const [nodeMoist, setNodeMoist] = useState("");
 
   useEffect(() => {
-    const client = mqtt.connect("mqtt://driver.cloudmqtt.com", options);
+    const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
 
     client.on("connect", () => {
       console.log("MQTT client connected to the server.");
@@ -173,12 +173,12 @@ const Home = () => {
       setData(response.data);
       let lastElement = response.data.slice(-1)[0];
       setAttitude({
-        yaw: lastElement.yaw,
-        roll: lastElement.roll,
-        pitch: lastElement.pitch,
-        att: lastElement.alt,
-        lat: lastElement.lat,
-        lng: lastElement.lng,
+        // yaw: lastElement.yaw,
+        // roll: lastElement.roll,
+        // pitch: lastElement.pitch,
+        // att: lastElement.alt,
+        // lat: lastElement.lat,
+        // lng: lastElement.lng,
       });
       if (data.length < 13) setStart(0);
       else setStart(data.length - 11);
