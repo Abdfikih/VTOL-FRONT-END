@@ -16,10 +16,10 @@ import mqtt from "mqtt/dist/mqtt";
 
 var options = {
   port: 18789,
-  // host: "mqtt://driver.cloudmqtt.com",
+  host: "mqtt://driver.cloudmqtt.com",
   clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
   username: 'cbobzrgp',
-  password: 'CKvOQLxrtuqc',
+  password: 'CKvOQLxrtuqc'
   // keepalive: 60,
   // reconnectPeriod: 1000,
   // protocolId: 'MQIsdp',
@@ -140,7 +140,7 @@ const Home = () => {
       client.subscribe("node/humid");
       client.subscribe("node/moist");
     });
-
+    console.log("masuk config");
     client.on("message", (topic, message) => {
 
       console.log("tessss");
@@ -152,7 +152,7 @@ const Home = () => {
       } else if (topic === "central/humid") {
         setCentralHumid(message.toString());
       } else if (topic === "central/gas") {
-        setCentralGas(message.toString());
+        setCentralGas(4);
       } else if (topic === "node/temp") {
         setNodeTemp(message.toString());
       } else if (topic === "node/humid") {
@@ -161,7 +161,7 @@ const Home = () => {
         setNodeMoist(message.toString());
       }
     });
-
+    console.log(setCentralGas);
     return () => {
       client.end();
     };
@@ -169,7 +169,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get("https://back-end-vtol-ex.vercel.app/api/drone");
+      const response = await axios.get("https://vtol-cigritous-backend.herokuapp.com/api/drone");
       setData(response.data);
       let lastElement = response.data.slice(-1)[0];
       setAttitude({
@@ -282,6 +282,7 @@ const Home = () => {
   const handleCardHover5 = () => setHoverCard5(!hoverCard5);
   const handleCardHover6 = () => setHoverCard6(!hoverCard6);
   const handleCardHover7 = () => setHoverCard7(!hoverCard7);
+  console.log("tes12333");
 
   return (
     <Stack direction={"row"} gap={"30px"}>
