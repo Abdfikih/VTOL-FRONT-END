@@ -16,7 +16,7 @@ import mqtt from "mqtt/dist/mqtt";
 
 var options = {
   port: 18789,
-  host: "mqtt://driver.cloudmqtt.com",
+  host: "wss://driver.cloudmqtt.com",
   clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
   username: 'cbobzrgp',
   password: 'CKvOQLxrtuqc'
@@ -152,7 +152,7 @@ const Home = () => {
       } else if (topic === "central/humid") {
         setCentralHumid(message.toString());
       } else if (topic === "central/gas") {
-        setCentralGas(4);
+        setCentralGas(message.toString());
       } else if (topic === "node/temp") {
         setNodeTemp(message.toString());
       } else if (topic === "node/humid") {
