@@ -15,11 +15,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import mqtt from "mqtt/dist/mqtt";
 
 var options = {
-  port:38789,
+  port: 38789,
   host: "wss://driver.cloudmqtt.com",
-  clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
-  username: 'cbobzrgp',
-  password: 'CKvOQLxrtuqc'
+  clientId: "mqttjs_" + Math.random().toString(16).substr(2, 8),
+  username: "cbobzrgp",
+  password: "CKvOQLxrtuqc",
   // keepalive: 60,
   // reconnectPeriod: 1000,
   // protocolId: 'MQIsdp',
@@ -142,7 +142,6 @@ const Home = () => {
     });
     console.log("masuk config");
     client.on("message", (topic, message) => {
-
       console.log("tessss");
       console.log(centralGas);
       if (topic === "central/temp") {
@@ -271,6 +270,14 @@ const Home = () => {
   const [hoverCard5, setHoverCard5] = useState(false);
   const [hoverCard6, setHoverCard6] = useState(false);
   const [hoverCard7, setHoverCard7] = useState(false);
+  const [hoverCard8, setHoverCard8] = useState(false);
+  const [hoverCard9, setHoverCard9] = useState(false);
+  const [hoverCard10, setHoverCard10] = useState(false);
+  const [hoverCard11, setHoverCard11] = useState(false);
+  const [hoverCard12, setHoverCard12] = useState(false);
+  const [hoverCard13, setHoverCard13] = useState(false);
+  const [hoverCard14, setHoverCard14] = useState(false);
+  const [hoverCard15, setHoverCard15] = useState(false);
 
   const handleDashboardHover = () => setHoverDashboard(!hoverDashboard);
   const handleSettingsHover = () => setHoverSettings(!hoverSettings);
@@ -282,6 +289,20 @@ const Home = () => {
   const handleCardHover5 = () => setHoverCard5(!hoverCard5);
   const handleCardHover6 = () => setHoverCard6(!hoverCard6);
   const handleCardHover7 = () => setHoverCard7(!hoverCard7);
+  const handleCardHover8 = () => setHoverCard8(!hoverCard8);
+  const handleCardHover9 = () => setHoverCard9(!hoverCard9);
+  const handleCardHover10 = () => setHoverCard10(!hoverCard10);
+  const handleCardHover11 = () => setHoverCard11(!hoverCard11);
+  const handleCardHover12 = () => setHoverCard12(!hoverCard12);
+  const handleCardHover13 = () => setHoverCard13(!hoverCard13);
+  const handleCardHover14 = () => setHoverCard14(!hoverCard14);
+  const handleCardHover15 = () => setHoverCard15(!hoverCard15);
+
+  const [showCentral, setShowCentral] = useState(false);
+  const [showNode1, setShowNode1] = useState(false);
+  const [showNode2, setShowNode2] = useState(false);
+  const [showNode3, setShowNode3] = useState(false);
+
   console.log("tes12333");
 
   return (
@@ -378,174 +399,376 @@ const Home = () => {
               ))}
             </GoogleMapReact>
           </Stack>
-          <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
-            <Grid item xs={1}>
-              <Card
-                onMouseEnter={handleCardHover1}
-                onMouseLeave={handleCardHover1}
-                sx={{ minHeight: "90px" }}
-                style={{
-                  backgroundColor: "#000000",
-                  boxShadow: hoverCard1 ? "0px 0px 20px 0px #000000" : "none",
-                }}
-              >
-                <CardHeader title="Temp Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
-                <CardContent
-                  style={{
-                    backgroundColor: "#3D3356",
-                    minHeight: "140px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <Typography variant="h4">{centralTemp} °C</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            {/* Kelembaban */}
-            <Grid item xs={1}>
-              <Card
-                onMouseEnter={handleCardHover2}
-                onMouseLeave={handleCardHover2}
-                sx={{ minHeight: "90px" }}
-                style={{
-                  backgroundColor: "#000000",
-                  boxShadow: hoverCard2 ? "0px 0px 20px 0px #000000" : "none",
-                }}
-              >
-                <CardHeader title="Pressure Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
-                <CardContent
-                  style={{
-                    backgroundColor: "#3D3356",
-                    minHeight: "140px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <Typography variant="h4">{centralPress}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            {/* Status Menyemprot */}
-            <Grid item xs={1}>
-              <Card
-                onMouseEnter={handleCardHover3}
-                onMouseLeave={handleCardHover3}
-                style={{
-                  backgroundColor: "#000000",
-                  boxShadow: hoverCard3 ? "0px 0px 20px 0px #000000" : "none",
-                }}
-              >
-                <CardHeader title="Humidity Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
-                <CardContent
-                  style={{
-                    backgroundColor: "#3D3356",
-                    minHeight: "140px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <Typography variant="h4">{centralHumid}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            {/* Ketinggian Barometer */}
-            <Grid item xs={1}>
-              <Card
-                onMouseEnter={handleCardHover4}
-                onMouseLeave={handleCardHover4}
-                style={{
-                  backgroundColor: "#000000",
-                  boxShadow: hoverCard4 ? "0px 0px 20px 0px #000000" : "none",
-                }}
-              >
-                <CardHeader title="Pressure Gas Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
-                <CardContent
-                  style={{
-                    backgroundColor: "#3D3356",
-                    minHeight: "140px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <Typography variant="h4">{centralGas}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={1}>
-              <Card
-                onMouseEnter={handleCardHover5}
-                onMouseLeave={handleCardHover5}
-                style={{
-                  backgroundColor: "#000000",
-                  boxShadow: hoverCard5 ? "0px 0px 20px 0px #000000" : "none",
-                }}
-              >
-                <CardHeader title="Temp Node" style={{ backgroundColor: "#312945", textAlign: "center" }} />
-                <CardContent
-                  style={{
-                    backgroundColor: "#3D3356",
-                    minHeight: "140px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <Typography variant="h4">{nodeTemp} °C</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={1}>
-              <Card
-                onMouseEnter={handleCardHover6}
-                onMouseLeave={handleCardHover6}
-                style={{
-                  backgroundColor: "#000000",
-                  boxShadow: hoverCard6 ? "0px 0px 20px 0px #000000" : "none",
-                }}
-              >
-                <CardHeader title="Humidity Node" style={{ backgroundColor: "#312945", textAlign: "center" }} />
-                <CardContent
-                  style={{
-                    backgroundColor: "#3D3356",
-                    minHeight: "140px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <Typography variant="h4">{nodeHumid}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={1}>
-              <Card
-                onMouseEnter={handleCardHover7}
-                onMouseLeave={handleCardHover7}
-                style={{
-                  backgroundColor: "#000000",
-                  boxShadow: hoverCard7 ? "0px 0px 20px 0px #000000" : "none",
-                }}
-              >
-                <CardHeader title="Moisture Node" style={{ backgroundColor: "#312945", textAlign: "center" }} />
-                <CardContent
-                  style={{
-                    backgroundColor: "#3D3356",
-                    minHeight: "140px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex",
-                  }}
-                >
-                  <Typography variant="h4">{nodeMoist}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+          <Stack direction={"column"} padding="10px" gap="10px"></Stack>
+
+          <div>
+            <button
+              onMouseEnter={handleCardHover12}
+              onMouseLeave={handleCardHover12}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard12 ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={() => setShowCentral(!showCentral)}
+            >
+              Central
+            </button>
+            <Stack direction={"column"} padding="20px" gap="10px">
+              {showCentral && (
+                <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover1}
+                      onMouseLeave={handleCardHover1}
+                      sx={{ minHeight: "90px" }}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard1 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Temp Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{centralTemp} °C</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  {/* Kelembaban */}
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover2}
+                      onMouseLeave={handleCardHover2}
+                      sx={{ minHeight: "90px" }}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard2 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Pressure Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{centralPress}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  {/* Status Menyemprot */}
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover3}
+                      onMouseLeave={handleCardHover3}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard3 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Humidity Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{centralHumid}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  {/* Ketinggian Barometer */}
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover4}
+                      onMouseLeave={handleCardHover4}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard4 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Pressure Gas Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{centralGas}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              )}
+            </Stack>
+
+            <button
+              onMouseEnter={handleCardHover13}
+              onMouseLeave={handleCardHover13}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard13 ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={() => setShowNode1(!showNode1)}
+            >
+              {" "}
+              Node 1
+            </button>
+            <Stack direction={"column"} padding="20px" gap="10px">
+              {showNode1 && (
+                <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover5}
+                      onMouseLeave={handleCardHover5}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard5 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Temp Node 1" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeTemp} °C</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover6}
+                      onMouseLeave={handleCardHover6}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard6 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Humidity Node 1" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeHumid}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover7}
+                      onMouseLeave={handleCardHover7}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard7 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Moisture Node 1" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeMoist}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              )}
+            </Stack>
+
+            <button
+              onMouseEnter={handleCardHover14}
+              onMouseLeave={handleCardHover14}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard14 ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={() => setShowNode2(!showNode2)}
+            >
+              {" "}
+              Node 2
+            </button>
+            <Stack direction={"column"} padding="20px" gap="10px">
+              {showNode2 && (
+                <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover6}
+                      onMouseLeave={handleCardHover6}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard6 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Temp Node 2" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeTemp} °C</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover7}
+                      onMouseLeave={handleCardHover7}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard7 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Humidity Node 2" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeHumid}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover8}
+                      onMouseLeave={handleCardHover8}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard8 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Moisture Node 2" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeMoist}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              )}
+            </Stack>
+
+            <button
+              onMouseEnter={handleCardHover15}
+              onMouseLeave={handleCardHover15}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard15 ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={() => setShowNode3(!showNode3)}
+            >
+              {" "}
+              Node 3
+            </button>
+            <Stack direction={"column"} padding="20px" gap="10px">
+              {showNode3 && (
+                <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover9}
+                      onMouseLeave={handleCardHover9}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard9 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Temp Node 3" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeTemp} °C</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover10}
+                      onMouseLeave={handleCardHover10}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard10 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Humidity Node 3" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeHumid}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <Card
+                      onMouseEnter={handleCardHover11}
+                      onMouseLeave={handleCardHover11}
+                      style={{
+                        backgroundColor: "#000000",
+                        boxShadow: hoverCard11 ? "0px 0px 20px 0px #000000" : "none",
+                      }}
+                    >
+                      <CardHeader title="Moisture Node 3" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardContent
+                        style={{
+                          backgroundColor: "#3D3356",
+                          minHeight: "140px",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Typography variant="h4">{nodeMoist}</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              )}
+            </Stack>
+          </div>
 
           <MDBContainer>
             <Typography
