@@ -121,9 +121,15 @@ const Home = () => {
   const [centralPress, setCentralPress] = useState("");
   const [centralHumid, setCentralHumid] = useState("");
   const [centralGas, setCentralGas] = useState("");
-  const [nodeTemp, setNodeTemp] = useState("");
-  const [nodeHumid, setNodeHumid] = useState("");
-  const [nodeMoist, setNodeMoist] = useState("");
+  const [nodeTemp1, setNodeTemp1] = useState("");
+  const [nodeHumid1, setNodeHumid1] = useState("");
+  const [nodeMoist1, setNodeMoist1] = useState("");
+  const [nodeTemp2, setNodeTemp2] = useState("");
+  const [nodeHumid2, setNodeHumid2] = useState("");
+  const [nodeMoist2, setNodeMoist2] = useState("");
+  const [nodeTemp3, setNodeTemp3] = useState("");
+  const [nodeHumid3, setNodeHumid3] = useState("");
+  const [nodeMoist3, setNodeMoist3] = useState("");
 
   useEffect(() => {
     const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
@@ -134,11 +140,17 @@ const Home = () => {
       client.subscribe("central/press");
       client.subscribe("central/humid");
       client.subscribe("central/gas");
-      console.log("tes");
-      console.log(centralTemp);
-      client.subscribe("node/temp");
-      client.subscribe("node/humid");
-      client.subscribe("node/moist");
+      // console.log("tes");
+      // console.log(centralTemp);
+      client.subscribe("1/temp");
+      client.subscribe("1/humid");
+      client.subscribe("1/moist");
+      client.subscribe("2/temp");
+      client.subscribe("2/humid");
+      client.subscribe("2/moist");
+      client.subscribe("3/temp");
+      client.subscribe("3/humid");
+      client.subscribe("3/moist");
     });
     console.log("masuk config");
     client.on("message", (topic, message) => {
@@ -152,12 +164,24 @@ const Home = () => {
         setCentralHumid(message.toString());
       } else if (topic === "central/gas") {
         setCentralGas(message.toString());
-      } else if (topic === "node/temp") {
-        setNodeTemp(message.toString());
-      } else if (topic === "node/humid") {
-        setNodeHumid(message.toString());
-      } else if (topic === "node/moist") {
-        setNodeMoist(message.toString());
+      } else if (topic === "1/temp") {
+        setNodeTemp1(message.toString());
+      } else if (topic === "1/humid") {
+        setNodeHumid1(message.toString());
+      } else if (topic === "1/moist") {
+        setNodeMoist1(message.toString());
+      } else if (topic === "2/temp") {
+        setNodeTemp2(message.toString());
+      } else if (topic === "2/humid") {
+        setNodeHumid2(message.toString());
+      } else if (topic === "2/moist") {
+        setNodeMoist2(message.toString());
+      } else if (topic === "3/temp") {
+        setNodeTemp3(message.toString());
+      } else if (topic === "3/humid") {
+        setNodeHumid3(message.toString());
+      } else if (topic === "3/moist") {
+        setNodeMoist3(message.toString());
       }
     });
     console.log(setCentralGas);
@@ -545,7 +569,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeTemp} °C</Typography>
+                        <Typography variant="h4">{nodeTemp1} °C</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -568,7 +592,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeHumid}</Typography>
+                        <Typography variant="h4">{nodeHumid1}</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -591,7 +615,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeMoist}</Typography>
+                        <Typography variant="h4">{nodeMoist1}</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -630,7 +654,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeTemp} °C</Typography>
+                        <Typography variant="h4">{nodeTemp2} °C</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -653,7 +677,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeHumid}</Typography>
+                        <Typography variant="h4">{nodeHumid2}</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -676,7 +700,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeMoist}</Typography>
+                        <Typography variant="h4">{nodeMoist2}</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -715,7 +739,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeTemp} °C</Typography>
+                        <Typography variant="h4">{nodeTemp3} °C</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -738,7 +762,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeHumid}</Typography>
+                        <Typography variant="h4">{nodeHumid3}</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -761,7 +785,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeMoist}</Typography>
+                        <Typography variant="h4">{nodeMoist3}</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
