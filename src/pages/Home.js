@@ -117,6 +117,8 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const totalNode = 3;
+
   const [centralTemp, setCentralTemp] = useState("");
   const [centralPress, setCentralPress] = useState("");
   const [centralHumid, setCentralHumid] = useState("");
@@ -136,51 +138,52 @@ const Home = () => {
 
     client.on("connect", () => {
       console.log("MQTT client connected to the server.");
-      client.subscribe("central/temp");
-      client.subscribe("central/press");
-      client.subscribe("central/humid");
-      client.subscribe("central/gas");
+      // client.subscribe("totalNode");
+      client.subscribe("/central/temp");
+      client.subscribe("/central/press");
+      client.subscribe("/central/humid");
+      client.subscribe("/central/gas");
       // console.log("tes");
       // console.log(centralTemp);
-      client.subscribe("1/temp");
-      client.subscribe("1/humid");
-      client.subscribe("1/moist");
-      client.subscribe("2/temp");
-      client.subscribe("2/humid");
-      client.subscribe("2/moist");
-      client.subscribe("3/temp");
-      client.subscribe("3/humid");
-      client.subscribe("3/moist");
+      for (let i = 1; i <= totalNode; i++) {
+        client.subscribe("/" + i + "/temp");
+        client.subscribe("/" + i + "/humid");
+        client.subscribe("/" + i + "/moist");
+      }
     });
+
     console.log("masuk config");
     client.on("message", (topic, message) => {
       console.log("tessss");
       console.log(centralGas);
-      if (topic === "central/temp") {
+      if (topic === "/central/temp") {
         setCentralTemp(message.toString());
-      } else if (topic === "central/press") {
+      } else if (topic === "/central/press") {
         setCentralPress(message.toString());
-      } else if (topic === "central/humid") {
+      } else if (topic === "/central/humid") {
         setCentralHumid(message.toString());
-      } else if (topic === "central/gas") {
+      } else if (topic === "/central/gas") {
         setCentralGas(message.toString());
-      } else if (topic === "1/temp") {
+      } else if (topic === "/1/temp") {
+        console.log(message.toString());
         setNodeTemp1(message.toString());
-      } else if (topic === "1/humid") {
+      } else if (topic === "/1/humid") {
         setNodeHumid1(message.toString());
-      } else if (topic === "1/moist") {
+      } else if (topic === "/1/moist") {
         setNodeMoist1(message.toString());
-      } else if (topic === "2/temp") {
+      } else if (topic === "/2/temp") {
+        console.log(message.toString());
         setNodeTemp2(message.toString());
-      } else if (topic === "2/humid") {
+      } else if (topic === "/2/humid") {
         setNodeHumid2(message.toString());
-      } else if (topic === "2/moist") {
+      } else if (topic === "/2/moist") {
         setNodeMoist2(message.toString());
-      } else if (topic === "3/temp") {
+      } else if (topic === "/3/temp") {
+        console.log(message.toString());
         setNodeTemp3(message.toString());
-      } else if (topic === "3/humid") {
+      } else if (topic === "/3/humid") {
         setNodeHumid3(message.toString());
-      } else if (topic === "3/moist") {
+      } else if (topic === "/3/moist") {
         setNodeMoist3(message.toString());
       }
     });
@@ -506,7 +509,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{centralHumid}</Typography>
+                        <Typography variant="h4">{centralHumid} %</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -520,7 +523,7 @@ const Home = () => {
                         boxShadow: hoverCard4 ? "0px 0px 20px 0px #000000" : "none",
                       }}
                     >
-                      <CardHeader title="Pressure Gas Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
+                      <CardHeader title="Ozone Central" style={{ backgroundColor: "#312945", textAlign: "center" }} />
                       <CardContent
                         style={{
                           backgroundColor: "#3D3356",
@@ -592,7 +595,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeHumid1}</Typography>
+                        <Typography variant="h4">{nodeHumid1} %</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -615,7 +618,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeMoist1}</Typography>
+                        <Typography variant="h4">{nodeMoist1} %</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -677,7 +680,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeHumid2}</Typography>
+                        <Typography variant="h4">{nodeHumid2} %</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -700,7 +703,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeMoist2}</Typography>
+                        <Typography variant="h4">{nodeMoist2} %</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -762,7 +765,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeHumid3}</Typography>
+                        <Typography variant="h4">{nodeHumid3} %</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
@@ -785,7 +788,7 @@ const Home = () => {
                           display: "flex",
                         }}
                       >
-                        <Typography variant="h4">{nodeMoist3}</Typography>
+                        <Typography variant="h4">{nodeMoist3} %</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
