@@ -507,7 +507,7 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showCentral && (
                     <>
-                      <CorCard title="Cordinat Position Central" value={JSON.stringify(mapsFlight[0])} handleCardHover={handleCardHover18} hoverCard={hoverCard18} />
+                      <CorCard title="Coordinate Position Central" value={JSON.stringify(mapsFlight[0])} handleCardHover={handleCardHover18} hoverCard={hoverCard18} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
@@ -544,7 +544,7 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showNode1 && (
                     <>
-                      <CorCard title="Cordinat Position Node 1" value={JSON.stringify(mapsFlight[1])} handleCardHover={handleCardHover19} hoverCard={hoverCard19} />
+                      <CorCard title="Coordinate Position Node 1" value={JSON.stringify(mapsFlight[1])} handleCardHover={handleCardHover19} hoverCard={hoverCard19} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
@@ -578,7 +578,7 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showNode2 && (
                     <>
-                      <CorCard title="Cordinat Position Node 2" value={JSON.stringify(mapsFlight[2])} handleCardHover={handleCardHover20} hoverCard={hoverCard20} />
+                      <CorCard title="Coordinate Position Node 2" value={JSON.stringify(mapsFlight[2])} handleCardHover={handleCardHover20} hoverCard={hoverCard20} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
@@ -612,7 +612,7 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showNode3 && (
                     <>
-                      <CorCard title="Cordinat Position Node 3" value={JSON.stringify(mapsFlight[3])} handleCardHover={handleCardHover21} hoverCard={hoverCard21} />
+                      <CorCard title="Coordinate Position Node 3" value={JSON.stringify(mapsFlight[3])} handleCardHover={handleCardHover21} hoverCard={hoverCard21} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
