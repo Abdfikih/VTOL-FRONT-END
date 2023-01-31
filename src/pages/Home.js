@@ -202,6 +202,9 @@ const Home = () => {
         client.subscribe("/" + i + "/humid");
         client.subscribe("/" + i + "/moist");
       }
+      for (let i = 0; i < mapsFlight.length; i++) {
+        client.publish("/" + i + "/coordinate", JSON.stringify(mapsFlight[i]), { qos: 0 });
+      }
     });
 
     console.log("masuk config");
@@ -243,7 +246,7 @@ const Home = () => {
     return () => {
       client.end();
     };
-  }, []);
+  }, [mapsFlight]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -530,7 +533,7 @@ const Home = () => {
               </>
             )}
 
-            {titik >= 1 && (
+            {titik > 1 && (
               <>
                 <button
                   onMouseEnter={handleCardHover15}
@@ -564,7 +567,7 @@ const Home = () => {
               </>
             )}
 
-            {titik >= 2 && (
+            {titik > 2 && (
               <>
                 <button
                   onMouseEnter={handleCardHover16}
@@ -598,7 +601,7 @@ const Home = () => {
               </>
             )}
 
-            {titik >= 3 && (
+            {titik > 3 && (
               <>
                 <button
                   onMouseEnter={handleCardHover17}
