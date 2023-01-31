@@ -161,6 +161,11 @@ const Home = () => {
     zoom: 19,
   };
 
+  const handleResetLocation = () => {
+    setMapsFlight([]);
+    setTitik(0);
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setHoursTime(moment().format("H:mm:ss"));
@@ -366,6 +371,7 @@ const Home = () => {
   const [hoverCard19, setHoverCard19] = useState(false);
   const [hoverCard20, setHoverCard20] = useState(false);
   const [hoverCard21, setHoverCard21] = useState(false);
+  const [hoverCard22, setHoverCard22] = useState(false);
 
   const handleDashboardHover = () => setHoverDashboard(!hoverDashboard);
   const handleSettingsHover = () => setHoverSettings(!hoverSettings);
@@ -391,6 +397,7 @@ const Home = () => {
   const handleCardHover19 = () => setHoverCard19(!hoverCard19);
   const handleCardHover20 = () => setHoverCard20(!hoverCard20);
   const handleCardHover21 = () => setHoverCard21(!hoverCard21);
+  const handleCardHover22 = () => setHoverCard22(!hoverCard22);
 
   const [showCentral, setShowCentral] = useState(false);
   const [showNode1, setShowNode1] = useState(false);
@@ -493,6 +500,16 @@ const Home = () => {
               ))}
             </GoogleMapReact>
           </Stack>
+          <div>
+            <button
+              onMouseEnter={handleCardHover22}
+              onMouseLeave={handleCardHover22}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard22 ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={handleResetLocation}
+            >
+              Reset Location
+            </button>
+          </div>
           <Stack direction={"column"} padding="10px" gap="10px"></Stack>
 
           <div>
@@ -591,7 +608,7 @@ const Home = () => {
                             <NodeCard title="Humidity Node 2" value={nodeHumid2 + " %"} handleCardHover={handleCardHover9} hoverCard={hoverCard9} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Moisture Node 2" value={nodeMoist1 + " %"} handleCardHover={handleCardHover10} hoverCard={hoverCard10} />
+                            <NodeCard title="Moisture Node 2" value={nodeMoist2 + " %"} handleCardHover={handleCardHover10} hoverCard={hoverCard10} />
                           </Grid>
                         </Grid>
                       </Stack>
