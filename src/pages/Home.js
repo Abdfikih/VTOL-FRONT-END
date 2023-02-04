@@ -140,7 +140,7 @@ const Home = () => {
   const [datasets, setDatasets] = useState([]);
   const [start, setStart] = useState(0);
 
-  let totalNode = 10;
+  let totalNode = 20;
 
   const nodes = [];
 
@@ -172,6 +172,12 @@ const Home = () => {
     const newHoverCard = [...hoverCard];
     newHoverCard[index] = !newHoverCard[index];
     setHoverCard(newHoverCard);
+  };
+
+  const handleNodeClick = (index) => {
+    let newShowNode = [...showNode];
+    newShowNode[index] = !newShowNode[index];
+    setShowNode(newShowNode);
   };
 
   const [attitude, setAttitude] = useState({
@@ -542,7 +548,7 @@ const Home = () => {
                     border: "none",
                     boxShadow: hoverCard[index] ? "0px 0px 20px 0px #000000" : "none",
                   }}
-                  onClick={() => setShowNode(index)(!showNode[index])}
+                  onClick={() => handleNodeClick(index)}
                 >
                   Node {index + 1}
                 </button>
