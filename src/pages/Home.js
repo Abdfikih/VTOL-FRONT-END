@@ -128,8 +128,6 @@ const CorCard = ({ title, value, handleCardHover, hoverCard }) => {
   );
 };
 
-const nodes = [1, 2, 3, 4];
-
 const Home = () => {
   moment.locale("id");
   const [hoursTime, setHoursTime] = useState("");
@@ -142,7 +140,13 @@ const Home = () => {
   const [datasets, setDatasets] = useState([]);
   const [start, setStart] = useState(0);
 
-  const totalNode = 3;
+  let totalNode = 10;
+
+  const nodes = [];
+
+  for (let index = 1; index <= totalNode; index++) {
+    nodes.push(index);
+  }
 
   const [centralTemp, setCentralTemp] = useState("");
   const [centralPress, setCentralPress] = useState("");
@@ -152,7 +156,7 @@ const Home = () => {
   const [nodeMoist, setNodeMoist] = useState([]);
   const [nodeHumid, setNodeHumid] = useState([]);
 
-  const [showNode, setShowNode] = useState(Array(nodes.length).fill(false));
+  const [showNode, setShowNode] = useState(Array(nodes.length).fill(true));
   const [hoverCard, setHoverCard] = useState(Array(nodes.length).fill(false));
   const [hoverDashboard, setHoverDashboard] = useState(false);
   const [hoverSettings, setHoverSettings] = useState(false);
@@ -162,7 +166,7 @@ const Home = () => {
   const handleSettingsHover = () => setHoverSettings(!hoverSettings);
   const handleControlsHover = () => setHoverControls(!hoverControls);
 
-  const [showCentral, setShowCentral] = useState(false);
+  const [showCentral, setShowCentral] = useState(true);
 
   const handleCardHover = (index) => {
     const newHoverCard = [...hoverCard];
@@ -194,12 +198,12 @@ const Home = () => {
     setMapsFlightLng([]);
     setTitik(0);
   };
-
   useEffect(() => {
     const interval = setInterval(() => {
       setHoursTime(moment().format("H:mm:ss"));
       setDaysTime(moment().format("ddd, DD MMMM YYYY"));
     }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -525,7 +529,7 @@ const Home = () => {
               </>
             )}
 
-            {nodes.map((node, index) => (
+            {nodes.slice(1, titik).map((node, index) => (
               <>
                 <button
                   key={index}
@@ -538,12 +542,12 @@ const Home = () => {
                     border: "none",
                     boxShadow: hoverCard[index] ? "0px 0px 20px 0px #000000" : "none",
                   }}
-                  onClick={() => setShowNode(index, !showNode[index])}
+                  onClick={() => setShowNode(index)(!showNode[index])}
                 >
                   Node {index + 1}
                 </button>
                 <Stack direction={"column"} padding="20px" gap="10px">
-                  {true && (
+                  {showNode[index] && (
                     <>
                       <CorCard
                         title={`Coordinate Position Node ${index + 1}`}
