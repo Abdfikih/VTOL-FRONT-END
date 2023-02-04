@@ -156,7 +156,7 @@ const Home = () => {
   const [nodeMoist, setNodeMoist] = useState([]);
   const [nodeHumid, setNodeHumid] = useState([]);
 
-  const [showNode, setShowNode] = useState(Array(nodes.length).fill(true));
+  const [showNode, setShowNode] = useState(Array(nodes.length).fill(false));
   const [hoverCard, setHoverCard] = useState(Array(nodes.length).fill(false));
   const [hoverDashboard, setHoverDashboard] = useState(false);
   const [hoverSettings, setHoverSettings] = useState(false);
@@ -166,7 +166,7 @@ const Home = () => {
   const handleSettingsHover = () => setHoverSettings(!hoverSettings);
   const handleControlsHover = () => setHoverControls(!hoverControls);
 
-  const [showCentral, setShowCentral] = useState(true);
+  const [showCentral, setShowCentral] = useState(false);
 
   const handleCardHover = (index) => {
     const newHoverCard = [...hoverCard];
