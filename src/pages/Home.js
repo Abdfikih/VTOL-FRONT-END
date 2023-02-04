@@ -20,12 +20,6 @@ var options = {
   clientId: "mqttjs_" + Math.random().toString(16).substr(2, 8),
   username: "cbobzrgp",
   password: "CKvOQLxrtuqc",
-  // keepalive: 60,
-  // reconnectPeriod: 1000,
-  // protocolId: 'MQIsdp',
-  // protocolVersion: 3,
-  // clean: true,
-  // encoding: 'utf8'
 };
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -134,15 +128,48 @@ const CorCard = ({ title, value, handleCardHover, hoverCard }) => {
   );
 };
 
+const nodes = [1, 2, 3, 4];
+
 const Home = () => {
   moment.locale("id");
   const [hoursTime, setHoursTime] = useState("");
   const [daysTime, setDaysTime] = useState("");
   const [mapsFlight, setMapsFlight] = useState([]);
+  const [mapsFlightLtd, setMapsFlightLtd] = useState([]);
+  const [mapsFlightLng, setMapsFlightLng] = useState([]);
   const [data, setData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const [start, setStart] = useState(0);
+
+  const totalNode = 3;
+
+  const [centralTemp, setCentralTemp] = useState("");
+  const [centralPress, setCentralPress] = useState("");
+  const [centralHumid, setCentralHumid] = useState("");
+  const [centralGas, setCentralGas] = useState("");
+  const [nodeTemp, setNodeTemp] = useState([]);
+  const [nodeMoist, setNodeMoist] = useState([]);
+  const [nodeHumid, setNodeHumid] = useState([]);
+
+  const [showNode, setShowNode] = useState(Array(nodes.length).fill(false));
+  const [hoverCard, setHoverCard] = useState(Array(nodes.length).fill(false));
+  const [hoverDashboard, setHoverDashboard] = useState(false);
+  const [hoverSettings, setHoverSettings] = useState(false);
+  const [hoverControls, setHoverControls] = useState(false);
+
+  const handleDashboardHover = () => setHoverDashboard(!hoverDashboard);
+  const handleSettingsHover = () => setHoverSettings(!hoverSettings);
+  const handleControlsHover = () => setHoverControls(!hoverControls);
+
+  const [showCentral, setShowCentral] = useState(false);
+
+  const handleCardHover = (index) => {
+    const newHoverCard = [...hoverCard];
+    newHoverCard[index] = !newHoverCard[index];
+    setHoverCard(newHoverCard);
+  };
+
   const [attitude, setAttitude] = useState({
     yaw: 0.0,
     pitch: 0.0,
@@ -163,6 +190,8 @@ const Home = () => {
 
   const handleResetLocation = () => {
     setMapsFlight([]);
+    setMapsFlightLtd([]);
+    setMapsFlightLng([]);
     setTitik(0);
   };
 
@@ -174,84 +203,80 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const totalNode = 3;
+  useEffect(
+    () => {
+      const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
 
-  const [centralTemp, setCentralTemp] = useState("");
-  const [centralPress, setCentralPress] = useState("");
-  const [centralHumid, setCentralHumid] = useState("");
-  const [centralGas, setCentralGas] = useState("");
-  const [nodeTemp1, setNodeTemp1] = useState("");
-  const [nodeHumid1, setNodeHumid1] = useState("");
-  const [nodeMoist1, setNodeMoist1] = useState("");
-  const [nodeTemp2, setNodeTemp2] = useState("");
-  const [nodeHumid2, setNodeHumid2] = useState("");
-  const [nodeMoist2, setNodeMoist2] = useState("");
-  const [nodeTemp3, setNodeTemp3] = useState("");
-  const [nodeHumid3, setNodeHumid3] = useState("");
-  const [nodeMoist3, setNodeMoist3] = useState("");
+      client.on("connect", () => {
+        console.log("MQTT client connected to the server.");
+        // client.subscribe("totalNode");
+        client.subscribe("/central/temp");
+        client.subscribe("/central/press");
+        client.subscribe("/central/humid");
+        client.subscribe("/central/gas");
+        // console.log("tes");
+        // console.log(centralTemp);
+        for (let i = 1; i <= mapsFlight.length; i++) {
+          client.publish("/" + i + "/latitude", JSON.stringify(mapsFlightLtd[i - 1]), { qos: 0 });
+          client.publish("/" + i + "/longitude", JSON.stringify(mapsFlightLng[i - 1]), { qos: 0 });
+        }
+        for (let i = 1; i <= 20; i++) {
+          client.subscribe("/" + i + "/temp");
+          client.subscribe("/" + i + "/humid");
+          client.subscribe("/" + i + "/moist");
+          client.subscribe("/" + i + "/latitude");
+          client.subscribe("/" + i + "/longitude");
+        }
+      });
 
-  useEffect(() => {
-    const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
-
-    client.on("connect", () => {
-      console.log("MQTT client connected to the server.");
-      // client.subscribe("totalNode");
-      client.subscribe("/central/temp");
-      client.subscribe("/central/press");
-      client.subscribe("/central/humid");
-      client.subscribe("/central/gas");
-      // console.log("tes");
-      // console.log(centralTemp);
-      for (let i = 1; i <= totalNode; i++) {
-        client.subscribe("/" + i + "/temp");
-        client.subscribe("/" + i + "/humid");
-        client.subscribe("/" + i + "/moist");
-      }
-      for (let i = 0; i < mapsFlight.length; i++) {
-        client.publish("/" + i + "/coordinate", JSON.stringify(mapsFlight[i]), { qos: 0 });
-      }
-    });
-
-    console.log("masuk config");
-    client.on("message", (topic, message) => {
-      console.log("tessss");
-      console.log(centralGas);
-      if (topic === "/central/temp") {
-        setCentralTemp(message.toString());
-      } else if (topic === "/central/press") {
-        setCentralPress(message.toString());
-      } else if (topic === "/central/humid") {
-        setCentralHumid(message.toString());
-      } else if (topic === "/central/gas") {
-        setCentralGas(message.toString());
-      } else if (topic === "/1/temp") {
-        console.log(message.toString());
-        setNodeTemp1(message.toString());
-      } else if (topic === "/1/humid") {
-        setNodeHumid1(message.toString());
-      } else if (topic === "/1/moist") {
-        setNodeMoist1(message.toString());
-      } else if (topic === "/2/temp") {
-        console.log(message.toString());
-        setNodeTemp2(message.toString());
-      } else if (topic === "/2/humid") {
-        setNodeHumid2(message.toString());
-      } else if (topic === "/2/moist") {
-        setNodeMoist2(message.toString());
-      } else if (topic === "/3/temp") {
-        console.log(message.toString());
-        setNodeTemp3(message.toString());
-      } else if (topic === "/3/humid") {
-        setNodeHumid3(message.toString());
-      } else if (topic === "/3/moist") {
-        setNodeMoist3(message.toString());
-      }
-    });
-    console.log(setCentralGas);
-    return () => {
-      client.end();
-    };
-  }, [mapsFlight]);
+      console.log("masuk config");
+      client.on("message", (topic, message) => {
+        console.log("tessss");
+        console.log(centralGas);
+        if (topic === "/central/temp") {
+          setCentralTemp(message.toString());
+        } else if (topic === "/central/press") {
+          setCentralPress(message.toString());
+        } else if (topic === "/central/humid") {
+          setCentralHumid(message.toString());
+        } else if (topic === "/central/gas") {
+          setCentralGas(message.toString());
+        }
+        for (let i = 1; i <= 20; i++) {
+          if (topic === "/" + i + "/temp") {
+            let arrTemp = [...nodeTemp];
+            arrTemp.push(message.toString());
+            setNodeTemp(arrTemp);
+          } else if (topic === "/" + i + "humid") {
+            let arrHumid = [...nodeHumid];
+            arrHumid.push(message.toString());
+            setNodeHumid(arrHumid);
+          } else if (topic === "/" + i + "/moist") {
+            let arrMoist = [...nodeMoist];
+            arrMoist.push(message.toString());
+            setNodeMoist(arrMoist);
+          } else if (topic === "/" + i + "/latitude") {
+            let arrLat = [...mapsFlightLtd];
+            arrLat.push(message.toString());
+            setMapsFlightLtd(arrLat);
+          } else if (topic === "/" + i + "/longitude") {
+            let arrLng = [...mapsFlightLng];
+            arrLng.push(message.toString());
+            setMapsFlightLng(arrLng);
+            console.log(JSON.stringify(arrLng));
+          }
+        }
+      });
+      console.log(setCentralGas);
+      return () => {
+        client.end();
+      };
+    },
+    [mapsFlight],
+    [nodeTemp],
+    [nodeHumid],
+    [nodeMoist]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -347,62 +372,6 @@ const Home = () => {
     };
     fetchData();
   }, [data, start]);
-  const [hoverDashboard, setHoverDashboard] = useState(false);
-  const [hoverSettings, setHoverSettings] = useState(false);
-  const [hoverControls, setHoverControls] = useState(false);
-  const [hoverCard1, setHoverCard1] = useState(false);
-  const [hoverCard2, setHoverCard2] = useState(false);
-  const [hoverCard3, setHoverCard3] = useState(false);
-  const [hoverCard4, setHoverCard4] = useState(false);
-  const [hoverCard5, setHoverCard5] = useState(false);
-  const [hoverCard6, setHoverCard6] = useState(false);
-  const [hoverCard7, setHoverCard7] = useState(false);
-  const [hoverCard8, setHoverCard8] = useState(false);
-  const [hoverCard9, setHoverCard9] = useState(false);
-  const [hoverCard10, setHoverCard10] = useState(false);
-  const [hoverCard11, setHoverCard11] = useState(false);
-  const [hoverCard12, setHoverCard12] = useState(false);
-  const [hoverCard13, setHoverCard13] = useState(false);
-  const [hoverCard14, setHoverCard14] = useState(false);
-  const [hoverCard15, setHoverCard15] = useState(false);
-  const [hoverCard16, setHoverCard16] = useState(false);
-  const [hoverCard17, setHoverCard17] = useState(false);
-  const [hoverCard18, setHoverCard18] = useState(false);
-  const [hoverCard19, setHoverCard19] = useState(false);
-  const [hoverCard20, setHoverCard20] = useState(false);
-  const [hoverCard21, setHoverCard21] = useState(false);
-  const [hoverCard22, setHoverCard22] = useState(false);
-
-  const handleDashboardHover = () => setHoverDashboard(!hoverDashboard);
-  const handleSettingsHover = () => setHoverSettings(!hoverSettings);
-  const handleControlsHover = () => setHoverControls(!hoverControls);
-  const handleCardHover1 = () => setHoverCard1(!hoverCard1);
-  const handleCardHover2 = () => setHoverCard2(!hoverCard2);
-  const handleCardHover3 = () => setHoverCard3(!hoverCard3);
-  const handleCardHover4 = () => setHoverCard4(!hoverCard4);
-  const handleCardHover5 = () => setHoverCard5(!hoverCard5);
-  const handleCardHover6 = () => setHoverCard6(!hoverCard6);
-  const handleCardHover7 = () => setHoverCard7(!hoverCard7);
-  const handleCardHover8 = () => setHoverCard8(!hoverCard8);
-  const handleCardHover9 = () => setHoverCard9(!hoverCard9);
-  const handleCardHover10 = () => setHoverCard10(!hoverCard10);
-  const handleCardHover11 = () => setHoverCard11(!hoverCard11);
-  const handleCardHover12 = () => setHoverCard12(!hoverCard12);
-  const handleCardHover13 = () => setHoverCard13(!hoverCard13);
-  const handleCardHover14 = () => setHoverCard14(!hoverCard14);
-  const handleCardHover15 = () => setHoverCard15(!hoverCard15);
-  const handleCardHover16 = () => setHoverCard16(!hoverCard16);
-  const handleCardHover17 = () => setHoverCard17(!hoverCard17);
-  const handleCardHover18 = () => setHoverCard18(!hoverCard18);
-  const handleCardHover19 = () => setHoverCard19(!hoverCard19);
-  const handleCardHover20 = () => setHoverCard20(!hoverCard20);
-  const handleCardHover21 = () => setHoverCard21(!hoverCard21);
-  const handleCardHover22 = () => setHoverCard22(!hoverCard22);
-
-  const [showCentral, setShowCentral] = useState(false);
-  const [showNode1, setShowNode1] = useState(false);
-  const [showNode2, setShowNode2] = useState(false);
-  const [showNode3, setShowNode3] = useState(false);
 
   console.log("tes12333");
 
@@ -489,8 +458,14 @@ const Home = () => {
               onClick={(e) => {
                 if (mapsFlight.length < titik) {
                   let arr = [...mapsFlight];
+                  let arr1 = [...mapsFlightLtd];
+                  let arr2 = [...mapsFlightLng];
                   arr.push({ lat: e.lat, lng: e.lng });
+                  arr1.push(e.lat);
+                  arr2.push(e.lng);
                   setMapsFlight(arr);
+                  setMapsFlightLtd(arr1);
+                  setMapsFlightLng(arr2);
                 }
               }}
             >
@@ -502,9 +477,9 @@ const Home = () => {
           </Stack>
           <div>
             <button
-              onMouseEnter={handleCardHover22}
-              onMouseLeave={handleCardHover22}
-              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard22 ? "0px 0px 20px 0px #000000" : "none" }}
+              onMouseEnter={() => handleCardHover(1)}
+              onMouseLeave={() => handleCardHover(1)}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[1] ? "0px 0px 20px 0px #000000" : "none" }}
               onClick={handleResetLocation}
             >
               Reset Location
@@ -516,9 +491,9 @@ const Home = () => {
             {titik >= 0 && (
               <>
                 <button
-                  onMouseEnter={handleCardHover14}
-                  onMouseLeave={handleCardHover14}
-                  style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard14 ? "0px 0px 20px 0px #000000" : "none" }}
+                  onMouseEnter={() => handleCardHover(2)}
+                  onMouseLeave={() => handleCardHover(2)}
+                  style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[2] ? "0px 0px 20px 0px #000000" : "none" }}
                   onClick={() => setShowCentral(!showCentral)}
                 >
                   Central
@@ -527,20 +502,20 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showCentral && (
                     <>
-                      <CorCard title="Coordinate Position Central" value={JSON.stringify(mapsFlight[0])} handleCardHover={handleCardHover18} hoverCard={hoverCard18} />
+                      <CorCard title="Coordinate Position Central" value={"Ltd : " + JSON.stringify(mapsFlightLtd[0]) + " | Lng : " + JSON.stringify(mapsFlightLng[0])} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
-                            <NodeCard title="Temp Central" value={centralTemp + " °C"} handleCardHover={handleCardHover1} hoverCard={hoverCard1} />
+                            <NodeCard title="Temp Central" value={centralTemp + " °C"} handleCardHover={() => handleCardHover(4)} hoverCard={hoverCard[4]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Humidity Central" value={centralHumid + " %"} handleCardHover={handleCardHover2} hoverCard={hoverCard2} />
+                            <NodeCard title="Humidity Central" value={centralHumid + " %"} handleCardHover={() => handleCardHover(5)} hoverCard={hoverCard[5]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Pressure Central" value={centralPress + " %"} handleCardHover={handleCardHover3} hoverCard={hoverCard3} />
+                            <NodeCard title="Pressure Central" value={centralPress + " %"} handleCardHover={() => handleCardHover(6)} hoverCard={hoverCard[6]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Ozone Central" value={centralGas + " %"} handleCardHover={handleCardHover4} hoverCard={hoverCard4} />
+                            <NodeCard title="Ozone Central" value={centralGas + " %"} handleCardHover={() => handleCardHover(7)} hoverCard={hoverCard[7]} />
                           </Grid>
                         </Grid>
                       </Stack>
@@ -550,31 +525,42 @@ const Home = () => {
               </>
             )}
 
-            {titik > 1 && (
+            {nodes.map((node, index) => (
               <>
                 <button
-                  onMouseEnter={handleCardHover15}
-                  onMouseLeave={handleCardHover15}
-                  style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard15 ? "0px 0px 20px 0px #000000" : "none" }}
-                  onClick={() => setShowNode1(!showNode1)}
+                  key={index}
+                  onMouseEnter={() => handleCardHover(index)}
+                  onMouseLeave={() => handleCardHover(index)}
+                  style={{
+                    backgroundColor: "#3D3356",
+                    color: "white",
+                    padding: "10px 30px",
+                    border: "none",
+                    boxShadow: hoverCard[index] ? "0px 0px 20px 0px #000000" : "none",
+                  }}
+                  onClick={() => setShowNode(index, !showNode[index])}
                 >
-                  {" "}
-                  Node 1
+                  Node {index + 1}
                 </button>
                 <Stack direction={"column"} padding="20px" gap="10px">
-                  {showNode1 && (
+                  {true && (
                     <>
-                      <CorCard title="Coordinate Position Node 1" value={JSON.stringify(mapsFlight[1])} handleCardHover={handleCardHover19} hoverCard={hoverCard19} />
+                      <CorCard
+                        title={`Coordinate Position Node ${index + 1}`}
+                        value={`Ltd : ${JSON.stringify(mapsFlightLtd[index + 1])} | Lng : ${JSON.stringify(mapsFlightLng[index + 1])}`}
+                        handleCardHover={() => handleCardHover(index * 3)}
+                        hoverCard={hoverCard[index * 3]}
+                      />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
-                            <NodeCard title="Temp Node 1" value={nodeTemp1 + " °C"} handleCardHover={handleCardHover5} hoverCard={hoverCard5} />
+                            <NodeCard title={`Temp Node ${index + 1}`} value={`${nodeTemp[index]} °C`} handleCardHover={() => handleCardHover(index * 3 + 1)} hoverCard={hoverCard[index * 3 + 1]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Humidity Node 1" value={nodeHumid1 + " %"} handleCardHover={handleCardHover6} hoverCard={hoverCard6} />
+                            <NodeCard title={`Humidity Node ${index + 1}`} value={`${nodeHumid[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 2)} hoverCard={hoverCard[index * 3 + 2]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Moisture Node 1" value={nodeMoist1 + " %"} handleCardHover={handleCardHover7} hoverCard={hoverCard7} />
+                            <NodeCard title={`Moisture Node ${index + 1}`} value={`${nodeMoist[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 3)} hoverCard={hoverCard[index * 3 + 3]} />
                           </Grid>
                         </Grid>
                       </Stack>
@@ -582,9 +568,9 @@ const Home = () => {
                   )}
                 </Stack>
               </>
-            )}
+            ))}
 
-            {titik > 2 && (
+            {/* {titik > 2 && (
               <>
                 <button
                   onMouseEnter={handleCardHover16}
@@ -598,17 +584,17 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showNode2 && (
                     <>
-                      <CorCard title="Coordinate Position Node 2" value={JSON.stringify(mapsFlight[2])} handleCardHover={handleCardHover20} hoverCard={hoverCard20} />
+                      <CorCard title="Coordinate Position Node 2" value={"Ltd : " + JSON.stringify(mapsFlightLtd[2]) + " | Lng : " + JSON.stringify(mapsFlightLng[2])} handleCardHover={handleCardHover20} hoverCard={hoverCard20} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
-                            <NodeCard title="Temp Node 2" value={nodeTemp2 + " °C"} handleCardHover={handleCardHover8} hoverCard={hoverCard8} />
+                            <NodeCard title="Temp Node 2" value={nodeTemp[1] + " °C"} handleCardHover={handleCardHover8} hoverCard={hoverCard8} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Humidity Node 2" value={nodeHumid2 + " %"} handleCardHover={handleCardHover9} hoverCard={hoverCard9} />
+                            <NodeCard title="Humidity Node 2" value={nodeHumid[1] + " %"} handleCardHover={handleCardHover9} hoverCard={hoverCard9} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Moisture Node 2" value={nodeMoist2 + " %"} handleCardHover={handleCardHover10} hoverCard={hoverCard10} />
+                            <NodeCard title="Moisture Node 2" value={nodeMoist[1] + " %"} handleCardHover={handleCardHover10} hoverCard={hoverCard10} />
                           </Grid>
                         </Grid>
                       </Stack>
@@ -632,17 +618,17 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showNode3 && (
                     <>
-                      <CorCard title="Coordinate Position Node 3" value={JSON.stringify(mapsFlight[3])} handleCardHover={handleCardHover21} hoverCard={hoverCard21} />
+                      <CorCard title="Coordinate Position Node 3" value={"Ltd : " + JSON.stringify(mapsFlightLtd[3]) + " | Lng : " + JSON.stringify(mapsFlightLng[3])} handleCardHover={handleCardHover21} hoverCard={hoverCard21} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
-                            <NodeCard title="Temp Node 3" value={nodeTemp3 + " °C"} handleCardHover={handleCardHover11} hoverCard={hoverCard11} />
+                            <NodeCard title="Temp Node 3" value={nodeTemp[2] + " °C"} handleCardHover={handleCardHover11} hoverCard={hoverCard11} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Humidity Node 3" value={nodeHumid3 + " %"} handleCardHover={handleCardHover12} hoverCard={hoverCard12} />
+                            <NodeCard title="Humidity Node 3" value={nodeHumid[2] + " %"} handleCardHover={handleCardHover12} hoverCard={hoverCard12} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Moisture Node 3" value={nodeMoist3 + " %"} handleCardHover={handleCardHover13} hoverCard={hoverCard13} />
+                            <NodeCard title="Moisture Node 3" value={nodeMoist[2] + " %"} handleCardHover={handleCardHover13} hoverCard={hoverCard13} />
                           </Grid>
                         </Grid>
                       </Stack>
@@ -650,7 +636,7 @@ const Home = () => {
                   )}
                 </Stack>
               </>
-            )}
+            )} */}
           </div>
 
           <MDBContainer>
