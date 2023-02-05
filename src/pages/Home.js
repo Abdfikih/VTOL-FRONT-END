@@ -195,7 +195,7 @@ const Home = () => {
       lat: attitude.lat,
       lng: attitude.lng,
     },
-    zoom: 19,
+    zoom: 18,
   };
 
   const handleResetLocation = () => {
@@ -479,9 +479,9 @@ const Home = () => {
                 }
               }}
             >
-              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" />
+              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" anchor={[0.5, 0.5]} />
               {mapsFlight?.map((data, idx) => (
-                <LocationPin lat={data.lat} lng={data.lng} text={`Terbang ke-${idx + 1}`} color="gray" />
+                <LocationPin lat={data.lat} lng={data.lng} text={`Terbang ke-${idx + 1}`} color="gray" anchor={[0.5, 0.5]} />
               ))}
             </GoogleMapReact>
           </Stack>
