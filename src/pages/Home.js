@@ -387,7 +387,7 @@ const Home = () => {
 
   return (
     <Stack direction={"row"} gap={"30px"}>
-      <Stack flexBasis={"25%"} width={"25%"} alignItems="center" gap="10px" sx={{ background: "#000000", height: "100vh", padding: "30px" }}>
+      <Stack flexBasis={"25%"} width={"80%"} maxWidth={"25%"} alignItems="center" gap="10px" sx={{ background: "#000000", height: "100vh", padding: "30px" }}>
         <img src={logo} alt="Logo" width="120px" />
 
         <Typography>{hoursTime}</Typography>
@@ -479,9 +479,9 @@ const Home = () => {
                 }
               }}
             >
-              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" anchor={[0.5, 0.5]} />
+              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" anchor={0.5} fixed={true} options={{ zIndex: 100 }} />
               {mapsFlight?.map((data, idx) => (
-                <LocationPin lat={data.lat} lng={data.lng} text={`Terbang ke-${idx + 1}`} color="gray" anchor={[0.5, 0.5]} />
+                <LocationPin lat={data.lat} lng={data.lng} text={`Terbang ke-${idx + 1}`} color="yellow" anchor={0.5} fixed={true} options={{ zIndex: 100 }} />
               ))}
             </GoogleMapReact>
           </Stack>
