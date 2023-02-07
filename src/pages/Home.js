@@ -537,7 +537,7 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showCentral && (
                     <>
-                      <CorCard title="Coordinate Position Central" value={"Ltd : " + JSON.stringify(mapsFlightLtd[0]) + " | Lng : " + JSON.stringify(mapsFlightLng[0])} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
+                      <CorCard title="Coordinate Position Central" value={"Ltd :  | Lng : "} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
@@ -560,7 +560,7 @@ const Home = () => {
               </>
             )}
 
-            {nodes.slice(1, titik).map((node, index) => (
+            {nodes.slice(0, titik).map((node, index) => (
               <>
                 <button
                   key={index}
@@ -582,7 +582,7 @@ const Home = () => {
                     <>
                       <CorCard
                         title={`Coordinate Position Node ${index + 1}`}
-                        value={`Ltd : ${JSON.stringify(mapsFlightLtd[index + 1])} | Lng : ${JSON.stringify(mapsFlightLng[index + 1])}`}
+                        value={`Ltd : ${JSON.stringify(mapsFlightLtd[index])} | Lng : ${JSON.stringify(mapsFlightLng[index])}`}
                         handleCardHover={() => handleCardHover(index * 3)}
                         hoverCard={hoverCard[index * 3]}
                       />
