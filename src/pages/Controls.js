@@ -136,8 +136,9 @@ const Controls = () => {
   const [droneBattery, setDroneBattery] = useState([]);
   const [droneAltitude, setDroneAltitude] = useState([]);
   const [droneSpeed, setDroneSpeed] = useState([]);
-  const [droneTemperature, setDroneTemperature] = useState([]);
+  const [droneTimestamp, setDroneTimeStamp] = useState([]);
   const [droneProgress, setDroneProgress] = useState([]);
+  const [droneHeading, setDroneHeading] = useState([]);
 
   let arrCoor = [...mapsFlight];
 
@@ -341,6 +342,9 @@ const Controls = () => {
                 <NodeCard title="Status Drone" value={droneStatus} handleCardHover={() => handleCardHover(1)} hoverCard={hoverCard[1]} />
               </Grid>
               <Grid item xs={1}>
+                <NodeCard title="Timestamp Drone" value={droneTimestamp} handleCardHover={() => handleCardHover(9)} hoverCard={hoverCard[9]} />
+              </Grid>
+              <Grid item xs={1}>
                 <NodeCard title="Status Battery" value={droneBattery + " %"} handleCardHover={() => handleCardHover(2)} hoverCard={hoverCard[2]} />
               </Grid>
               <Grid item xs={1}>
@@ -350,7 +354,7 @@ const Controls = () => {
                 <NodeCard title="Speed Drone" value={droneSpeed} handleCardHover={() => handleCardHover(4)} hoverCard={hoverCard[4]} />
               </Grid>
               <Grid item xs={1}>
-                <NodeCard title="Temperature Drone" value={droneTemperature + " °C"} handleCardHover={() => handleCardHover(5)} hoverCard={hoverCard[5]} />
+                <NodeCard title="Heading Drone" value={droneHeading} handleCardHover={() => handleCardHover(10)} hoverCard={hoverCard[10]} />
               </Grid>
             </Grid>
           </Stack>
