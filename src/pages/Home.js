@@ -254,27 +254,35 @@ const Home = () => {
         console.log(centralGas);
         if (topic === "/central/temp") {
           setCentralTemp(message.toString());
-        } else if (topic === "/central/press") {
+        }
+        if (topic === "/central/press") {
           setCentralPress(message.toString());
-        } else if (topic === "/central/humid") {
+        }
+        if (topic === "/central/humid") {
           setCentralHumid(message.toString());
-        } else if (topic === "/central/gas") {
+        }
+        if (topic === "/central/gas") {
           setCentralGas(message.toString());
         }
         for (let i = 1; i <= 20; i++) {
           if (topic === "/" + i + "/temp") {
             arrTemp[i - 1] = message.toString();
             setNodeTemp(arrTemp);
-          } else if (topic === "/" + i + "humid") {
+          }
+          if (topic === "/" + i + "/moist") {
+            arrMoist[i - 1] = message.toString();
+            console.log(message.toString());
+            setNodeMoist(arrMoist);
+          }
+          if (topic === "/" + i + "/humid") {
             arrHumid[i - 1] = message.toString();
             setNodeHumid(arrHumid);
-          } else if (topic === "/" + i + "/moist") {
-            arrMoist[i - 1] = message.toString();
-            setNodeMoist(arrMoist);
-          } else if (topic === "/" + i + "/latitude") {
+          }
+          if (topic === "/" + i + "/latitude") {
             arrLat[i - 1] = message.toString();
             setMapsFlightLtd(arrLat);
-          } else if (topic === "/" + i + "/longitude") {
+          }
+          if (topic === "/" + i + "/longitude") {
             arrLng[i - 1] = message.toString();
             setMapsFlightLng(arrLng);
           }
@@ -386,9 +394,10 @@ const Home = () => {
   }, [data, start]);
 
   console.log("tes12333");
+  console.log(arrHumid[0]);
+  console.log(arrHumid[1]);
   console.log(nodeTemp[0]);
   console.log(nodeTemp[1]);
-  console.log(nodeTemp[2]);
 
   return (
     <Stack direction={"row"} gap={"30px"}>
