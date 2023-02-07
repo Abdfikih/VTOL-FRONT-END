@@ -304,12 +304,12 @@ const Home = () => {
       setData(response.data);
       let lastElement = response.data.slice(-1)[0];
       setAttitude({
-        // yaw: lastElement.yaw,
-        // roll: lastElement.roll,
-        // pitch: lastElement.pitch,
-        // att: lastElement.alt,
-        // lat: lastElement.lat,
-        // lng: lastElement.lng,
+        yaw: lastElement.yaw,
+        roll: lastElement.roll,
+        pitch: lastElement.pitch,
+        att: lastElement.alt,
+        lat: lastElement.lat,
+        lng: lastElement.lng,
       });
       if (data.length < 13) setStart(0);
       else setStart(data.length - 11);
