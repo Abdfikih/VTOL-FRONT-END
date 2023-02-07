@@ -32,6 +32,7 @@
     "react-three-fiber": "^6.0.13",
     "styled-components": "^5.3.6",
     "three": "^0.145.0",
+    "url": "^0.11.0",
     "use-cannon": "^0.5.3",
     "web-vitals": "^2.1.4"
   },
