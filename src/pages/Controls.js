@@ -135,7 +135,9 @@ const Controls = () => {
   const [droneStatus, setDroneStatus] = useState([]);
   const [droneBattery, setDroneBattery] = useState([]);
   const [droneAltitude, setDroneAltitude] = useState([]);
-  const [droneSpeed, setDroneSpeed] = useState([]);
+  const [droneSpeedX, setDroneSpeedX] = useState([]);
+  const [droneSpeedY, setDroneSpeedY] = useState([]);
+  const [droneSpeedZ, setDroneSpeedZ] = useState([]);
   const [droneTimestamp, setDroneTimeStamp] = useState([]);
   const [droneProgress, setDroneProgress] = useState([]);
   const [droneHeading, setDroneHeading] = useState([]);
@@ -351,12 +353,22 @@ const Controls = () => {
                 <NodeCard title="Altitude Drone" value={droneAltitude} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
               </Grid>
               <Grid item xs={1}>
-                <NodeCard title="Speed Drone" value={droneSpeed} handleCardHover={() => handleCardHover(4)} hoverCard={hoverCard[4]} />
-              </Grid>
-              <Grid item xs={1}>
                 <NodeCard title="Heading Drone" value={droneHeading} handleCardHover={() => handleCardHover(10)} hoverCard={hoverCard[10]} />
               </Grid>
             </Grid>
+            <Stack direction={"column"} padding="20px" gap="10px">
+              <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
+                <Grid item xs={1}>
+                  <NodeCard title="Speed Drone (X)" value={droneSpeedX} handleCardHover={() => handleCardHover(4)} hoverCard={hoverCard[4]} />
+                </Grid>
+                <Grid item xs={1}>
+                  <NodeCard title="Speed Drone (Y)" value={droneSpeedY} handleCardHover={() => handleCardHover(10)} hoverCard={hoverCard[10]} />
+                </Grid>
+                <Grid item xs={1}>
+                  <NodeCard title="Speed Drone (Z)" value={droneSpeedZ} handleCardHover={() => handleCardHover(11)} hoverCard={hoverCard[11]} />
+                </Grid>
+              </Grid>
+            </Stack>
           </Stack>
         </Stack>
       </Box>
