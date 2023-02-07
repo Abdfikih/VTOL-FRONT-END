@@ -139,9 +139,15 @@ const Controls = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
-
   useEffect(() => {
+    const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
+    client.on("connect", () => {
+      console.log("MQTT client connected to the server.");
+      for (let i = 1; i <= 20; i++) {
+        client.subscribe("/" + i + "/coordinate");
+      }
+    });
+
     console.log("masuk config");
     client.on("message", (topic, message) => {
       console.log("tessss");
@@ -152,22 +158,10 @@ const Controls = () => {
         }
       }
     });
-    for (let i = 1; i <= 20; i++) {
-      client.subscribe("/" + i + "/coordinate");
-    }
-
     return () => {
-      for (let i = 1; i <= 20; i++) {
-        client.unsubscribe("/" + i + "/coordinate");
-      }
+      client.end();
     };
   }, [mapsFlight]);
-
-  useEffect(() => {
-    client.on("connect", () => {
-      console.log("MQTT client connected to the server.");
-    });
-  }, []);
 
   return (
     <Stack direction={"row"} gap={"30px"}>
