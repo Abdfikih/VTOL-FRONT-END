@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Stack, Typography, Grid, Card, CardHeader, CardContent, IconButton, Box, Input } from "@mui/material";
 import logo from "../logo_0.png";
 import moment from "moment/moment";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "react-three-fiber";
 import { Physics, usePlane, useBox } from "@react-three/cannon";
 import axios from "axios";
 import GoogleMapReact from "google-map-react";
@@ -37,30 +37,28 @@ function Plane(props) {
   );
 }
 
-function Cube(props) {
+function Cube() {
   const [attitude, setAttitude] = useState({
     yaw: 0.0,
     pitch: 0.0,
     roll: 0.0,
   });
-  const [ref, setRef] = useState({ mass: 1, ...props });
   const [position, setPosition] = useState([0, 0.5, 0]);
   const [rotation, setRotation] = useState([attitude.yaw, attitude.pitch, attitude.roll]);
+  const { clock } = useThree();
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setAttitude((prevAttitude) => ({
-  //       yaw: prevAttitude.yaw + 0.1,
-  //       pitch: prevAttitude.pitch + 0.1,
-  //       roll: prevAttitude.roll + 0.1,
-  //     }));
-  //     setRotation([attitude.yaw, attitude.pitch, attitude.roll]);
-  //   }, 100);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useFrame((state, delta) => {
+    setAttitude((prevAttitude) => ({
+      yaw: prevAttitude.yaw + 0.01,
+      pitch: prevAttitude.pitch + 0.01,
+      roll: prevAttitude.roll + 0.01,
+    }));
+    setRotation([attitude.yaw, attitude.pitch, attitude.roll]);
+    setPosition([0, Math.sin(clock.getElapsedTime()), 0]);
+  });
 
   return (
-    <mesh castShadow ref={ref} position={position} rotation={rotation}>
+    <mesh position={position} rotation={rotation}>
       <boxGeometry />
       <meshStandardMaterial color="#BA365D" />
     </mesh>
@@ -68,7 +66,7 @@ function Cube(props) {
 }
 
 const LocationPin = ({ text, color }) => (
-  <IconButton>
+  <IconButton sx={{ display: "inline-block", transform: "none", transform: "translate(-50%, -50%)" }}>
     <LocationOnIcon sx={{ color: color }} />
     <Typography component="p" sx={{ color: color }}>
       {text}
@@ -196,6 +194,14 @@ const Home = () => {
       lng: attitude.lng,
     },
     zoom: 18,
+    options: {
+      disableDefaultUI: true,
+      dragging: false,
+      scrollwheel: false,
+      panControl: false,
+      zoomControl: false,
+      gestureHandling: "none",
+    },
   };
 
   const handleResetLocation = () => {
@@ -430,9 +436,9 @@ const Home = () => {
         </Stack>
         <Stack direction={"column"} padding="20px" gap="0px"></Stack>
 
-        <Canvas dpr={[1, 2]} shadows camera={{ position: [-5, 5, 5], fov: 20 }}>
+        <Canvas dpr={[1, 2]} shadows camera={{ position: [-5, 5, 5], fov: 18 }}>
           <ambientLight />
-          <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 5]} castShadow />
+          <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 3]} castShadow />
           <Physics allowSleep={true}>
             <Plane />
             <Cube />
@@ -476,12 +482,23 @@ const Home = () => {
                   setMapsFlight(arr);
                   setMapsFlightLtd(arr1);
                   setMapsFlightLng(arr2);
+
+                  fetch("/api/save-location", {
+                    method: "POST",
+                    body: JSON.stringify({ lat: e.lat, lng: e.lng }),
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  })
+                    .then((response) => response.json())
+                    .then((data) => console.log("Location saved:", data))
+                    .catch((error) => console.error("Error:", error));
                 }
               }}
             >
-              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" anchor={0.5} fixed={true} options={{ zIndex: 100 }} />
+              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" />
               {mapsFlight?.map((data, idx) => (
-                <LocationPin lat={data.lat} lng={data.lng} text={`Terbang ke-${idx + 1}`} color="yellow" anchor={0.5} fixed={true} options={{ zIndex: 100 }} />
+                <LocationPin lat={data.lat} lng={data.lng} text={`Terbang ke-${idx + 1}`} color="yellow" />
               ))}
             </GoogleMapReact>
           </Stack>
