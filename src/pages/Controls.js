@@ -74,11 +74,71 @@ const LocationPin = ({ text, color }) => (
   </IconButton>
 );
 
+const CorCard = ({ title, value, handleCardHover, hoverCard }) => {
+  return (
+    <Card
+      onMouseEnter={handleCardHover}
+      onMouseLeave={handleCardHover}
+      style={{
+        backgroundColor: "#000000",
+        boxShadow: hoverCard ? "0px 0px 20px 0px #000000" : "none",
+      }}
+    >
+      <CardHeader title={title} style={{ backgroundColor: "#312945", textAlign: "center" }} />
+      <CardContent
+        style={{
+          backgroundColor: "#3D3356",
+          minHeight: "80px",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
+      >
+        <Typography variant="h4">{value}</Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
+const NodeCard = ({ title, value, handleCardHover, hoverCard }) => {
+  return (
+    <Card
+      onMouseEnter={handleCardHover}
+      onMouseLeave={handleCardHover}
+      style={{
+        backgroundColor: "#000000",
+        boxShadow: hoverCard ? "0px 0px 20px 0px #000000" : "none",
+      }}
+    >
+      <CardHeader title={title} style={{ backgroundColor: "#312945", textAlign: "center" }} />
+      <CardContent
+        style={{
+          backgroundColor: "#3D3356",
+          minHeight: "140px",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
+      >
+        <Typography variant="h4">{value}</Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
 const Controls = () => {
   moment.locale("id");
   const [hoursTime, setHoursTime] = useState("");
   const [daysTime, setDaysTime] = useState("");
   const [mapsFlight, setMapsFlight] = useState([]);
+  const [droneFlight, setDroneFlight] = useState([]);
+  const [droneStatus, setDroneStatus] = useState([]);
+  const [droneBattery, setDroneBattery] = useState([]);
+  const [droneAltitude, setDroneAltitude] = useState([]);
+  const [droneSpeed, setDroneSpeed] = useState([]);
+  const [droneTemperature, setDroneTemperature] = useState([]);
+  const [droneProgress, setDroneProgress] = useState([]);
+
   let arrCoor = [...mapsFlight];
 
   let totalNode = 20;
@@ -246,7 +306,54 @@ const Controls = () => {
               ))}
             </GoogleMapReact>
           </Stack>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <button
+              onMouseEnter={() => handleCardHover(6)}
+              onMouseLeave={() => handleCardHover(6)}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[6] ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={true}
+            >
+              Take Off Drone
+            </button>
+            <Card
+              onMouseEnter={() => handleCardHover(8)}
+              onMouseLeave={() => handleCardHover(8)}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[8] ? "0px 0px 20px 0px #000000" : "none" }}
+            >
+              Task Progress : {droneProgress}%{" "}
+            </Card>
+            <button
+              onMouseEnter={() => handleCardHover(7)}
+              onMouseLeave={() => handleCardHover(7)}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[7] ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={true}
+            >
+              Landing Drone
+            </button>
+          </div>
           <Stack direction={"column"} padding="10px" gap="10px"></Stack>
+        </Stack>
+        <Stack direction={"column"} padding="20px" gap="10px">
+          <CorCard title="Coordinate Position Drone" value={droneFlight} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
+          <Stack direction={"column"} padding="20px" gap="10px">
+            <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
+              <Grid item xs={1}>
+                <NodeCard title="Status Drone" value={droneStatus} handleCardHover={() => handleCardHover(1)} hoverCard={hoverCard[1]} />
+              </Grid>
+              <Grid item xs={1}>
+                <NodeCard title="Status Battery" value={droneBattery + " %"} handleCardHover={() => handleCardHover(2)} hoverCard={hoverCard[2]} />
+              </Grid>
+              <Grid item xs={1}>
+                <NodeCard title="Altitude Drone" value={droneAltitude} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
+              </Grid>
+              <Grid item xs={1}>
+                <NodeCard title="Speed Drone" value={droneSpeed} handleCardHover={() => handleCardHover(4)} hoverCard={hoverCard[4]} />
+              </Grid>
+              <Grid item xs={1}>
+                <NodeCard title="Temperature Drone" value={droneTemperature + " °C"} handleCardHover={() => handleCardHover(5)} hoverCard={hoverCard[5]} />
+              </Grid>
+            </Grid>
+          </Stack>
         </Stack>
       </Box>
     </Stack>
