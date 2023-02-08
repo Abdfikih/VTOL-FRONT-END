@@ -163,11 +163,11 @@ const Home = () => {
   const [showNode, setShowNode] = useState(Array(nodes.length).fill(false));
   const [hoverCard, setHoverCard] = useState(Array(nodes.length).fill(false));
   const [hoverDashboard, setHoverDashboard] = useState(false);
-  const [hoverSettings, setHoverSettings] = useState(false);
+  const [hoverAbout, setHoverAbout] = useState(false);
   const [hoverControls, setHoverControls] = useState(false);
 
   const handleDashboardHover = () => setHoverDashboard(!hoverDashboard);
-  const handleSettingsHover = () => setHoverSettings(!hoverSettings);
+  const handleAboutHover = () => setHoverAbout(!hoverAbout);
   const handleControlsHover = () => setHoverControls(!hoverControls);
 
   const [showCentral, setShowCentral] = useState(false);
@@ -420,15 +420,15 @@ const Home = () => {
             Dashboard
           </Button>
           <Button
-            onMouseEnter={handleSettingsHover}
-            onMouseLeave={handleSettingsHover}
+            onMouseEnter={handleAboutHover}
+            onMouseLeave={handleAboutHover}
             style={{
-              color: hoverSettings ? "#6841b0" : "white",
+              color: hoverAbout ? "#6841b0" : "white",
               fontSize: 20,
             }}
-            href="/Settings"
+            href="/About"
           >
-            Settings
+            About
           </Button>
           <Button
             onMouseEnter={handleControlsHover}

@@ -126,21 +126,49 @@ const NodeCard = ({ title, value, handleCardHover, hoverCard }) => {
   );
 };
 
+// const handleTakeOff = () => {
+//   // const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
+//   // client.on(
+//   //   "connect",
+//   //   () => {
+//   //     console.log("MQTT client connected to the server.");
+//   //     client.publish("/drone/take_land", String(1), { qos: 0 });
+//   //     return () => client.end();
+//   //   },
+//   //   []
+//   // );
+// };
+
+// const handleLanding = () => {
+//   // const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
+//   // client.on(
+//   //   "connect",
+//   //   () => {
+//   //     console.log("MQTT client connected to the server.");
+//   //     client.publish("/drone/take_land", String(0), { qos: 0 });
+//   //     return () => client.end();
+//   //   },
+//   //   []
+//   // );
+// };
+
 const Controls = () => {
   moment.locale("id");
   const [hoursTime, setHoursTime] = useState("");
   const [daysTime, setDaysTime] = useState("");
+  const [droneTakeLand, setDroneTakeLand] = useState("");
   const [mapsFlight, setMapsFlight] = useState([]);
-  const [droneFlight, setDroneFlight] = useState([]);
+  const [droneFlightLtd, setDroneFlightLtd] = useState([]);
+  const [droneFlightLng, setDroneFlightLng] = useState([]);
   const [droneStatus, setDroneStatus] = useState([]);
   const [droneBattery, setDroneBattery] = useState([]);
   const [droneAltitude, setDroneAltitude] = useState([]);
   const [droneSpeedX, setDroneSpeedX] = useState([]);
   const [droneSpeedY, setDroneSpeedY] = useState([]);
   const [droneSpeedZ, setDroneSpeedZ] = useState([]);
-  const [droneTimestamp, setDroneTimeStamp] = useState([]);
   const [droneProgress, setDroneProgress] = useState([]);
   const [droneHeading, setDroneHeading] = useState([]);
+  const [droneTimestamp, setDroneTimeStamp] = useState([]);
 
   let arrCoor = [...mapsFlight];
 
@@ -194,18 +222,17 @@ const Controls = () => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setHoursTime(moment().format("H:mm:ss"));
-      setDaysTime(moment().format("ddd, DD MMMM YYYY"));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
     const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
     client.on("connect", () => {
       console.log("MQTT client connected to the server.");
+      client.subscribe("/drone/lat");
+      client.subscribe("/drone/lng");
+      client.subscribe("/drone/alt");
+      client.subscribe("/drone/vx");
+      client.subscribe("/drone/vy");
+      client.subscribe("/drone/vz");
+      client.subscribe("/drone/yaw_curr");
+      client.subscribe("/drone/time");
       for (let i = 1; i <= 20; i++) {
         client.subscribe("/" + i + "/coordinate");
       }
@@ -214,6 +241,30 @@ const Controls = () => {
     console.log("masuk config");
     client.on("message", (topic, message) => {
       console.log("tessss");
+      if (topic === "/drone/lat") {
+        setDroneFlightLtd(message.toString());
+      }
+      if (topic === "/drone/lng") {
+        setDroneFlightLng(message.toString());
+      }
+      if (topic === "/drone/alt") {
+        setDroneAltitude(message.toString());
+      }
+      if (topic === "/drone/vx") {
+        setDroneSpeedX(message.toString());
+      }
+      if (topic === "/drone/vy") {
+        setDroneSpeedY(message.toString());
+      }
+      if (topic === "/drone/vz") {
+        setDroneSpeedZ(message.toString());
+      }
+      if (topic === "/drone/yaw_curr") {
+        setDroneHeading(message.toString());
+      }
+      if (topic === "/drone/time") {
+        setDroneTimeStamp(message.toString());
+      }
       for (let i = 1; i <= 20; i++) {
         if (topic === "/" + i + "/coordinate") {
           arrCoor[i - 1] = JSON.parse(message);
@@ -337,7 +388,7 @@ const Controls = () => {
           <Stack direction={"column"} padding="10px" gap="10px"></Stack>
         </Stack>
         <Stack direction={"column"} padding="20px" gap="10px">
-          <CorCard title="Coordinate Position Drone" value={droneFlight} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
+          <CorCard title="Coordinate Position Drone" value={"Lat : " + droneFlightLtd + " || Lng : " + droneFlightLng} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
           <Stack direction={"column"} padding="20px" gap="10px">
             <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
               <Grid item xs={1}>
