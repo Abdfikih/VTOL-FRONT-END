@@ -126,31 +126,39 @@ const NodeCard = ({ title, value, handleCardHover, hoverCard }) => {
   );
 };
 
-// const handleTakeOff = () => {
-//   // const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
-//   // client.on(
-//   //   "connect",
-//   //   () => {
-//   //     console.log("MQTT client connected to the server.");
-//   //     client.publish("/drone/take_land", String(1), { qos: 0 });
-//   //     return () => client.end();
-//   //   },
-//   //   []
-//   // );
-// };
+const handleTakeOff = () => {
+  let hasPublished = false;
+  const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
+  client.on(
+    "connect",
+    () => {
+      console.log("MQTT client connected to the server.");
+      if (!hasPublished) {
+        client.publish("/drone/take_land", String(1), { qos: 0 });
+        hasPublished = true;
+      }
+      return () => client.end();
+    },
+    []
+  );
+};
 
-// const handleLanding = () => {
-//   // const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
-//   // client.on(
-//   //   "connect",
-//   //   () => {
-//   //     console.log("MQTT client connected to the server.");
-//   //     client.publish("/drone/take_land", String(0), { qos: 0 });
-//   //     return () => client.end();
-//   //   },
-//   //   []
-//   // );
-// };
+const handleLanding = () => {
+  let hasPublished = false;
+  const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
+  client.on(
+    "connect",
+    () => {
+      console.log("MQTT client connected to the server.");
+      if (!hasPublished) {
+        client.publish("/drone/take_land", String(0), { qos: 0 });
+        hasPublished = true;
+      }
+      return () => client.end();
+    },
+    []
+  );
+};
 
 const Controls = () => {
   moment.locale("id");
@@ -365,7 +373,7 @@ const Controls = () => {
               onMouseEnter={() => handleCardHover(6)}
               onMouseLeave={() => handleCardHover(6)}
               style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[6] ? "0px 0px 20px 0px #000000" : "none" }}
-              onClick={true}
+              onClick={handleTakeOff}
             >
               Take Off Drone
             </button>
@@ -380,7 +388,7 @@ const Controls = () => {
               onMouseEnter={() => handleCardHover(7)}
               onMouseLeave={() => handleCardHover(7)}
               style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[7] ? "0px 0px 20px 0px #000000" : "none" }}
-              onClick={true}
+              onClick={handleLanding}
             >
               Landing Drone
             </button>
