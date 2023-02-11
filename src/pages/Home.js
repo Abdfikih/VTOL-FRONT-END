@@ -37,6 +37,69 @@ function Plane(props) {
   );
 }
 
+function LineChartCentral({ data, title }) {
+  // const { temp, humid, pressure, ozone } = data;
+  const labels = [1, 2, 3, 4];
+  const datasets = [
+    {
+      label: "Temperature",
+      data: [25, 26, 27, 28, 29],
+      backgroundColor: "rgba(255, 99, 132, 0.2)",
+      borderColor: "rgba(255, 99, 132, 1)",
+      borderWidth: 1,
+    },
+    {
+      label: "Humidity",
+      data: [40, 42, 39, 38, 37],
+      backgroundColor: "rgba(54, 162, 235, 0.2)",
+      borderColor: "rgba(54, 162, 235, 1)",
+      borderWidth: 1,
+    },
+    {
+      label: "Pressure",
+      data: [60, 65, 63, 61, 59],
+      backgroundColor: "rgba(255, 206, 86, 0.2)",
+      borderColor: "rgba(255, 206, 86, 1)",
+      borderWidth: 1,
+    },
+    {
+      label: "Ozone",
+      data: [100, 105, 102, 110, 115],
+      backgroundColor: "rgba(75, 192, 192, 0.2)",
+      borderColor: "rgba(75, 192, 192, 1)",
+      borderWidth: 1,
+    },
+  ];
+
+  return (
+    <>
+      <Typography
+        style={{
+          margin: "20px auto",
+          color: "#BA365D",
+          width: "100%",
+          textAlign: "center",
+          fontSize: "30px",
+          fontWeight: "bold",
+        }}
+        component="h3"
+      >
+        {title}
+      </Typography>
+      <article
+        style={{
+          width: "100%",
+          overflowX: "auto",
+          height: "70vh",
+          backgroundColor: "white",
+        }}
+      >
+        <Line data={{ labels, datasets }} options={{ maintainAspectRatio: false }} />
+      </article>
+    </>
+  );
+}
+
 function Cube() {
   const [attitude, setAttitude] = useState({
     yaw: 0.0,
@@ -192,7 +255,13 @@ const Home = () => {
     lat: -6.365232,
     lng: 106.824506,
   });
+
   const [titik, setTitik] = useState(0);
+  const [mapType, setMapType] = useState("roadmap");
+
+  const handleViewChange = () => {
+    setMapType(mapType === "roadmap" ? "satellite" : "roadmap");
+  };
 
   const defaultProps = {
     center: {
@@ -303,14 +372,14 @@ const Home = () => {
       const response = await axios.get("https://vtol-cigritous-backend.herokuapp.com/api/drone");
       setData(response.data);
       let lastElement = response.data.slice(-1)[0];
-      setAttitude({
-        yaw: lastElement.yaw,
-        roll: lastElement.roll,
-        pitch: lastElement.pitch,
-        att: lastElement.alt,
-        lat: lastElement.lat,
-        lng: lastElement.lng,
-      });
+      // setAttitude({
+      //   yaw: lastElement.yaw,
+      //   roll: lastElement.roll,
+      //   pitch: lastElement.pitch,
+      //   att: lastElement.alt,
+      //   lat: lastElement.lat,
+      //   lng: lastElement.lng,
+      // });
       if (data.length < 13) setStart(0);
       else setStart(data.length - 11);
       setLabels(
@@ -479,6 +548,7 @@ const Home = () => {
               }}
               defaultCenter={defaultProps.center}
               defaultZoom={defaultProps.zoom}
+              options={{ mapTypeId: mapType }}
               onClick={(e) => {
                 if (mapsFlight.length < titik) {
                   let arr = [...mapsFlight];
@@ -510,7 +580,15 @@ const Home = () => {
               ))}
             </GoogleMapReact>
           </Stack>
-          <div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <button
+              onMouseEnter={() => handleCardHover(24)}
+              onMouseLeave={() => handleCardHover(24)}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[24] ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={handleViewChange}
+            >
+              Switch to {mapType === "roadmap" ? "Satellite" : "Roadmap"} view
+            </button>
             <button
               onMouseEnter={() => handleCardHover(1)}
               onMouseLeave={() => handleCardHover(1)}
@@ -607,29 +685,7 @@ const Home = () => {
           </div>
 
           <MDBContainer>
-            <Typography
-              style={{
-                margin: "20px auto",
-                color: "#BA365D",
-                width: "100%",
-                textAlign: "center",
-                fontSize: "30px",
-                fontWeight: "bold",
-              }}
-              component="h3"
-            >
-              Line Chart Attitude
-            </Typography>
-            <article
-              style={{
-                width: "100%",
-                overflowX: "auto",
-                height: "70vh",
-                backgroundColor: "white",
-              }}
-            >
-              <Line data={{ labels, datasets }} options={{ maintainAspectRatio: false }} />
-            </article>
+            <LineChartCentral data={data} title={"Line Chart Central"} />
           </MDBContainer>
         </Stack>
       </Box>
