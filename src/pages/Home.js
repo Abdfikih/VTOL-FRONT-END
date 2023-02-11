@@ -100,6 +100,62 @@ function LineChartCentral({ data, title }) {
   );
 }
 
+function LineChartNode({ temp, humid, moist, title }) {
+  // const { temp, humid, pressure, ozone } = data;
+  const labels = [1, 2, 3, 4];
+  const datasets = [
+    {
+      label: "Temperature",
+      data: temp,
+      backgroundColor: "rgba(255, 99, 132, 0.2)",
+      borderColor: "rgba(255, 99, 132, 1)",
+      borderWidth: 1,
+    },
+    {
+      label: "Humidity",
+      data: humid,
+      backgroundColor: "rgba(54, 162, 235, 0.2)",
+      borderColor: "rgba(54, 162, 235, 1)",
+      borderWidth: 1,
+    },
+    {
+      label: "Moisture",
+      data: moist,
+      backgroundColor: "rgba(255, 206, 86, 0.2)",
+      borderColor: "rgba(255, 206, 86, 1)",
+      borderWidth: 1,
+    },
+  ];
+
+  return (
+    <>
+      <Typography
+        style={{
+          margin: "20px auto",
+          color: "#BA365D",
+          width: "100%",
+          textAlign: "center",
+          fontSize: "30px",
+          fontWeight: "bold",
+        }}
+        component="h3"
+      >
+        {title}
+      </Typography>
+      <article
+        style={{
+          width: "100%",
+          overflowX: "auto",
+          height: "70vh",
+          backgroundColor: "white",
+        }}
+      >
+        <Line data={{ labels, datasets }} options={{ maintainAspectRatio: false }} />
+      </article>
+    </>
+  );
+}
+
 function Cube() {
   const [attitude, setAttitude] = useState({
     yaw: 0.0,
@@ -686,6 +742,11 @@ const Home = () => {
 
           <MDBContainer>
             <LineChartCentral data={data} title={"Line Chart Central"} />
+            {nodes.slice(0, titik).map((node, index) => (
+              <>
+                <LineChartNode temp={nodeTemp[index]} humid={nodeHumid[index]} moist={nodeHumid[index]} title={`Line Chart Node ${index + 1}`} />
+              </>
+            ))}
           </MDBContainer>
         </Stack>
       </Box>
