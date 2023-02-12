@@ -190,12 +190,18 @@ const Controls = () => {
 
   const [hoverCard, setHoverCard] = useState(Array(nodes.length).fill(false));
   const [hoverDashboard, setHoverDashboard] = useState(false);
-  const [hoverSettings, setHoverSettings] = useState(false);
+  const [hoverAbout, setHoverAbout] = useState(false);
   const [hoverControls, setHoverControls] = useState(false);
 
   const handleDashboardHover = () => setHoverDashboard(!hoverDashboard);
-  const handleSettingsHover = () => setHoverSettings(!hoverSettings);
+  const handleAboutHover = () => setHoverAbout(!hoverAbout);
   const handleControlsHover = () => setHoverControls(!hoverControls);
+
+  const [mapType, setMapType] = useState("roadmap");
+
+  const handleViewChange = () => {
+    setMapType(mapType === "roadmap" ? "satellite" : "roadmap");
+  };
 
   const handleCardHover = (index) => {
     const newHoverCard = [...hoverCard];
@@ -228,6 +234,15 @@ const Controls = () => {
       gestureHandling: "none",
     },
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHoursTime(moment().format("H:mm:ss"));
+      setDaysTime(moment().format("ddd, DD MMMM YYYY"));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
@@ -306,15 +321,15 @@ const Controls = () => {
             Dashboard
           </Button>
           <Button
-            onMouseEnter={handleSettingsHover}
-            onMouseLeave={handleSettingsHover}
+            onMouseEnter={handleAboutHover}
+            onMouseLeave={handleAboutHover}
             style={{
-              color: hoverSettings ? "#6841b0" : "white",
+              color: hoverAbout ? "#6841b0" : "white",
               fontSize: 20,
             }}
-            href="/Settings"
+            href="/About"
           >
-            Settings
+            About
           </Button>
           <Button
             onMouseEnter={handleControlsHover}
@@ -352,6 +367,16 @@ const Controls = () => {
         >
           Controls Unnamed Drone
         </Typography>
+        <Stack direction={"row"} gap={"10px"} padding="20px">
+          <button
+            onMouseEnter={() => handleCardHover(24)}
+            onMouseLeave={() => handleCardHover(24)}
+            style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[24] ? "0px 0px 20px 0px #000000" : "none" }}
+            onClick={handleViewChange}
+          >
+            Switch to {mapType === "roadmap" ? "Satellite" : "Roadmap"} view
+          </button>
+        </Stack>
         <Stack direction={"column"} padding="20px" gap="20px">
           <Stack style={{ height: "50vh", width: "100%" }}>
             <GoogleMapReact
@@ -361,6 +386,7 @@ const Controls = () => {
               }}
               defaultCenter={defaultProps.center}
               defaultZoom={defaultProps.zoom}
+              options={{ mapTypeId: mapType }}
             >
               <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" />
               {mapsFlight?.map((data, idx) => (

@@ -423,6 +423,30 @@ const Home = () => {
     [nodeMoist]
   );
 
+  // After all data has been subscribed, send it to the backend
+  useEffect(() => {
+    const sendData = async () => {
+      for (let i = 1; i <= titik; i++) {
+        const data = {
+          node: i,
+          temperature: arrTemp[i - 1],
+          humidity: arrHumid[i - 1],
+          moisture: arrMoist[i - 1],
+        };
+        console.log("Data: ", data);
+        try {
+          setTimeout(async () => {
+            await axios.post("http://localhost:3000/insertnode", data);
+          }, 10000);
+        } catch (error) {
+          console.error("Error sending data to the backend: ", error);
+        }
+      }
+    };
+
+    sendData();
+  }, [arrTemp, arrHumid, arrMoist]);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get("https://vtol-cigritous-backend.herokuapp.com/api/drone");
