@@ -141,7 +141,7 @@ const About = () => {
         >
           About Cigritous
         </Typography>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "40vh" }}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           <Stack direction={"row"} gap={"20px"}>
             <img src={image1} alt="Image 1" width="300px" style={{ borderRadius: "50%", border: "5px solid #3D3356" }} />
             <img src={image2} alt="Image 2" width="300px" style={{ borderRadius: "50%", border: "5px solid #3D3356" }} />
