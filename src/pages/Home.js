@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Stack, Typography, Grid, Card, CardHeader, CardContent, IconButton, Box, Input } from "@mui/material";
+import { Stack, Typography, Grid, IconButton, Box, Input } from "@mui/material";
 import logo from "../logo_0.png";
 import moment from "moment/moment";
 import { Canvas, useFrame, useThree } from "react-three-fiber";
-import { Physics, usePlane, useBox } from "@react-three/cannon";
+import { Physics, usePlane } from "@react-three/cannon";
 import axios from "axios";
 import GoogleMapReact from "google-map-react";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
-import { Line } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import Button from "@mui/material/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import mqtt from "mqtt/dist/mqtt";
+import CorCard from "./components/CoordinateCard";
+import SensorCard from "./components/SensorCard";
+import Cube from "./components/Cube";
+import LineChartCentral from "./components/LineChartCentral";
+import LineChartNode from "./components/LineChartNode";
+import LocationPin from "./components/LocationPin";
 
 var options = {
   port: 38789,
@@ -36,214 +40,6 @@ function Plane(props) {
     </mesh>
   );
 }
-
-function LineChartCentral({ data, title }) {
-  // const { temp, humid, pressure, ozone } = data;
-  const labels = [1, 2, 3, 4];
-  const datasets = [
-    {
-      label: "Temperature",
-      data: [25, 26, 27, 28, 29],
-      backgroundColor: "rgba(255, 99, 132, 0.2)",
-      borderColor: "rgba(255, 99, 132, 1)",
-      borderWidth: 1,
-    },
-    {
-      label: "Humidity",
-      data: [40, 42, 39, 38, 37],
-      backgroundColor: "rgba(54, 162, 235, 0.2)",
-      borderColor: "rgba(54, 162, 235, 1)",
-      borderWidth: 1,
-    },
-    {
-      label: "Pressure",
-      data: [60, 65, 63, 61, 59],
-      backgroundColor: "rgba(255, 206, 86, 0.2)",
-      borderColor: "rgba(255, 206, 86, 1)",
-      borderWidth: 1,
-    },
-    {
-      label: "Ozone",
-      data: [100, 105, 102, 110, 115],
-      backgroundColor: "rgba(75, 192, 192, 0.2)",
-      borderColor: "rgba(75, 192, 192, 1)",
-      borderWidth: 1,
-    },
-  ];
-
-  return (
-    <>
-      <Typography
-        style={{
-          margin: "20px auto",
-          color: "#BA365D",
-          width: "100%",
-          textAlign: "center",
-          fontSize: "30px",
-          fontWeight: "bold",
-        }}
-        component="h3"
-      >
-        {title}
-      </Typography>
-      <article
-        style={{
-          width: "100%",
-          overflowX: "auto",
-          height: "70vh",
-          backgroundColor: "white",
-        }}
-      >
-        <Line data={{ labels, datasets }} options={{ maintainAspectRatio: false }} />
-      </article>
-    </>
-  );
-}
-
-function LineChartNode({ temp, humid, moist, title }) {
-  // const { temp, humid, pressure, ozone } = data;
-  const labels = [1, 2, 3, 4];
-  const datasets = [
-    {
-      label: "Temperature",
-      data: temp,
-      backgroundColor: "rgba(255, 99, 132, 0.2)",
-      borderColor: "rgba(255, 99, 132, 1)",
-      borderWidth: 1,
-    },
-    {
-      label: "Humidity",
-      data: humid,
-      backgroundColor: "rgba(54, 162, 235, 0.2)",
-      borderColor: "rgba(54, 162, 235, 1)",
-      borderWidth: 1,
-    },
-    {
-      label: "Moisture",
-      data: moist,
-      backgroundColor: "rgba(255, 206, 86, 0.2)",
-      borderColor: "rgba(255, 206, 86, 1)",
-      borderWidth: 1,
-    },
-  ];
-
-  return (
-    <>
-      <Typography
-        style={{
-          margin: "20px auto",
-          color: "#BA365D",
-          width: "100%",
-          textAlign: "center",
-          fontSize: "30px",
-          fontWeight: "bold",
-        }}
-        component="h3"
-      >
-        {title}
-      </Typography>
-      <article
-        style={{
-          width: "100%",
-          overflowX: "auto",
-          height: "70vh",
-          backgroundColor: "white",
-        }}
-      >
-        <Line data={{ labels, datasets }} options={{ maintainAspectRatio: false }} />
-      </article>
-    </>
-  );
-}
-
-function Cube() {
-  const [attitude, setAttitude] = useState({
-    yaw: 0.0,
-    pitch: 0.0,
-    roll: 0.0,
-  });
-  const [position, setPosition] = useState([0, 0.5, 0]);
-  const [rotation, setRotation] = useState([attitude.yaw, attitude.pitch, attitude.roll]);
-  const { clock } = useThree();
-
-  useFrame((state, delta) => {
-    setAttitude((prevAttitude) => ({
-      yaw: prevAttitude.yaw + 0.01,
-      pitch: prevAttitude.pitch + 0.01,
-      roll: prevAttitude.roll + 0.01,
-    }));
-    setRotation([attitude.yaw, attitude.pitch, attitude.roll]);
-    setPosition([0, Math.sin(clock.getElapsedTime()), 0]);
-  });
-
-  return (
-    <mesh position={position} rotation={rotation}>
-      <boxGeometry />
-      <meshStandardMaterial color="#BA365D" />
-    </mesh>
-  );
-}
-
-const LocationPin = ({ text, color }) => (
-  <IconButton sx={{ display: "inline-block", transform: "none", transform: "translate(-50%, -50%)" }}>
-    <LocationOnIcon sx={{ color: color }} />
-    <Typography component="p" sx={{ color: color }}>
-      {text}
-    </Typography>
-  </IconButton>
-);
-
-const NodeCard = ({ title, value, handleCardHover, hoverCard }) => {
-  return (
-    <Card
-      onMouseEnter={handleCardHover}
-      onMouseLeave={handleCardHover}
-      style={{
-        backgroundColor: "#000000",
-        boxShadow: hoverCard ? "0px 0px 20px 0px #000000" : "none",
-      }}
-    >
-      <CardHeader title={title} style={{ backgroundColor: "#312945", textAlign: "center" }} />
-      <CardContent
-        style={{
-          backgroundColor: "#3D3356",
-          minHeight: "140px",
-          alignItems: "center",
-          justifyContent: "center",
-          display: "flex",
-        }}
-      >
-        <Typography variant="h4">{value}</Typography>
-      </CardContent>
-    </Card>
-  );
-};
-
-const CorCard = ({ title, value, handleCardHover, hoverCard }) => {
-  return (
-    <Card
-      onMouseEnter={handleCardHover}
-      onMouseLeave={handleCardHover}
-      style={{
-        backgroundColor: "#000000",
-        boxShadow: hoverCard ? "0px 0px 20px 0px #000000" : "none",
-      }}
-    >
-      <CardHeader title={title} style={{ backgroundColor: "#312945", textAlign: "center" }} />
-      <CardContent
-        style={{
-          backgroundColor: "#3D3356",
-          minHeight: "80px",
-          alignItems: "center",
-          justifyContent: "center",
-          display: "flex",
-        }}
-      >
-        <Typography variant="h4">{value}</Typography>
-      </CardContent>
-    </Card>
-  );
-};
 
 const Home = () => {
   moment.locale("id");
@@ -423,7 +219,18 @@ const Home = () => {
     [nodeMoist]
   );
 
-  // After all data has been subscribed, send it to the backend
+  const [shouldSkip, setShouldSkip] = useState(true);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShouldSkip(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [shouldSkip]);
+
   useEffect(() => {
     const sendData = async () => {
       for (let i = 1; i <= titik; i++) {
@@ -435,17 +242,18 @@ const Home = () => {
         };
         console.log("Data: ", data);
         try {
-          setTimeout(async () => {
-            await axios.post("http://localhost:3000/insertnode", data);
-          }, 10000);
+          if (!shouldSkip) {
+            axios.post("http://localhost:3000/insertnode", data);
+            console.log("Data sent to the backend");
+            setShouldSkip(true);
+          }
         } catch (error) {
           console.error("Error sending data to the backend: ", error);
         }
       }
     };
-
     sendData();
-  }, [arrTemp, arrHumid, arrMoist]);
+  }, [arrTemp, arrHumid, arrMoist, titik, shouldSkip]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -616,7 +424,7 @@ const Home = () => {
           Dashboard Cigritous
         </Typography>
         <Box padding="20px">
-          <Typography fontSize="10px">Banyaknya Titik Terbang Drone</Typography>
+          <Typography fontSize="14px">Jumlah Node</Typography>
           <Input id="my-input" value={titik} sx={{ borderBottom: "1px solid #fffffff" }} onChange={(e) => setTitik(e.target.value)} />
         </Box>
         <Stack direction={"column"} padding="20px" gap="20px">
@@ -641,22 +449,22 @@ const Home = () => {
                   setMapsFlightLtd(arr1);
                   setMapsFlightLng(arr2);
 
-                  fetch("/api/save-location", {
-                    method: "POST",
-                    body: JSON.stringify({ lat: e.lat, lng: e.lng }),
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                  })
-                    .then((response) => response.json())
-                    .then((data) => console.log("Location saved:", data))
-                    .catch((error) => console.error("Error:", error));
+                  // fetch("/api/save-location", {
+                  //   method: "POST",
+                  //   body: JSON.stringify({ lat: e.lat, lng: e.lng }),
+                  //   headers: {
+                  //     "Content-Type": "application/json",
+                  //   },
+                  // })
+                  //   .then((response) => response.json())
+                  //   .then((data) => console.log("Location saved:", data))
+                  //   .catch((error) => console.error("Error:", error));
                 }
               }}
             >
               <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" />
               {mapsFlight?.map((data, idx) => (
-                <LocationPin lat={data.lat} lng={data.lng} text={`Terbang ke-${idx + 1}`} color="yellow" />
+                <LocationPin lat={data.lat} lng={data.lng} text={`Node ke-${idx + 1}`} color="yellow" />
               ))}
             </GoogleMapReact>
           </Stack>
@@ -695,20 +503,20 @@ const Home = () => {
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showCentral && (
                     <>
-                      <CorCard title="Coordinate Position Central" value={"Ltd :  | Lng : "} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
+                      <CorCard title="Coordinate Position Central" value={"Ltd :  || Lng : "} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
-                            <NodeCard title="Temp Central" value={centralTemp + " °C"} handleCardHover={() => handleCardHover(4)} hoverCard={hoverCard[4]} />
+                            <SensorCard title="Temp Central" value={centralTemp + " °C"} handleCardHover={() => handleCardHover(4)} hoverCard={hoverCard[4]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Humidity Central" value={centralHumid + " %"} handleCardHover={() => handleCardHover(5)} hoverCard={hoverCard[5]} />
+                            <SensorCard title="Humidity Central" value={centralHumid + " %"} handleCardHover={() => handleCardHover(5)} hoverCard={hoverCard[5]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Pressure Central" value={centralPress + " %"} handleCardHover={() => handleCardHover(6)} hoverCard={hoverCard[6]} />
+                            <SensorCard title="Pressure Central" value={centralPress + " %"} handleCardHover={() => handleCardHover(6)} hoverCard={hoverCard[6]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title="Ozone Central" value={centralGas + " %"} handleCardHover={() => handleCardHover(7)} hoverCard={hoverCard[7]} />
+                            <SensorCard title="Ozone Central" value={centralGas + " %"} handleCardHover={() => handleCardHover(7)} hoverCard={hoverCard[7]} />
                           </Grid>
                         </Grid>
                       </Stack>
@@ -747,13 +555,13 @@ const Home = () => {
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
-                            <NodeCard title={`Temp Node ${index + 1}`} value={`${nodeTemp[index]} °C`} handleCardHover={() => handleCardHover(index * 3 + 1)} hoverCard={hoverCard[index * 3 + 1]} />
+                            <SensorCard title={`Temp Node ${index + 1}`} value={`${nodeTemp[index]} °C`} handleCardHover={() => handleCardHover(index * 3 + 1)} hoverCard={hoverCard[index * 3 + 1]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title={`Humidity Node ${index + 1}`} value={`${nodeHumid[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 2)} hoverCard={hoverCard[index * 3 + 2]} />
+                            <SensorCard title={`Humidity Node ${index + 1}`} value={`${nodeHumid[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 2)} hoverCard={hoverCard[index * 3 + 2]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <NodeCard title={`Moisture Node ${index + 1}`} value={`${nodeMoist[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 3)} hoverCard={hoverCard[index * 3 + 3]} />
+                            <SensorCard title={`Moisture Node ${index + 1}`} value={`${nodeMoist[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 3)} hoverCard={hoverCard[index * 3 + 3]} />
                           </Grid>
                         </Grid>
                       </Stack>

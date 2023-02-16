@@ -10,6 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import image1 from "../DRONE2.jpeg";
 import image2 from "../DRONE4.jpg";
 import image3 from "../DRONE5.jpg";
+import Cube from "./components/Cube";
 
 function Plane(props) {
   const [ref] = usePlane(() => ({
@@ -20,34 +21,6 @@ function Plane(props) {
     <mesh receiveShadow ref={ref}>
       <planeGeometry args={[1000, 1000]} />
       <meshStandardMaterial color="#000" />
-    </mesh>
-  );
-}
-
-function Cube() {
-  const [attitude, setAttitude] = useState({
-    yaw: 0.0,
-    pitch: 0.0,
-    roll: 0.0,
-  });
-  const [position, setPosition] = useState([0, 0.5, 0]);
-  const [rotation, setRotation] = useState([attitude.yaw, attitude.pitch, attitude.roll]);
-  const { clock } = useThree();
-
-  useFrame((state, delta) => {
-    setAttitude((prevAttitude) => ({
-      yaw: prevAttitude.yaw + 0.01,
-      pitch: prevAttitude.pitch + 0.01,
-      roll: prevAttitude.roll + 0.01,
-    }));
-    setRotation([attitude.yaw, attitude.pitch, attitude.roll]);
-    setPosition([0, Math.sin(clock.getElapsedTime()), 0]);
-  });
-
-  return (
-    <mesh position={position} rotation={rotation}>
-      <boxGeometry />
-      <meshStandardMaterial color="#BA365D" />
     </mesh>
   );
 }
@@ -157,23 +130,3 @@ const About = () => {
 };
 
 export default About;
-
-// const PageNotFound = () => {
-//   const [isOpen, setIsOpen] = useState(false);
-
-//   const toggle = () => {
-//     setIsOpen(!isOpen);
-//   };
-//   return (
-//     <div>
-//       <ParagraphView text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
-//     </div>
-
-//     // <div className={`${isOpen ? "fixed h-screen w-full" : ""} flex flex-col min-h-screen min-w-[300px]`}>
-//     //   <div className="flex mx-20">
-//     //     <Drone />
-//     //   </div>
-//     // </div>
-//   );
-// };
-// export default PageNotFound;
