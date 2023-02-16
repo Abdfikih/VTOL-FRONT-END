@@ -28,19 +28,6 @@ var options = {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-function Plane(props) {
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
-    ...props,
-  }));
-  return (
-    <mesh receiveShadow ref={ref}>
-      <planeGeometry args={[1000, 1000]} />
-      <meshStandardMaterial color="#000" />
-    </mesh>
-  );
-}
-
 const Home = () => {
   moment.locale("id");
   const [hoursTime, setHoursTime] = useState("");
@@ -400,12 +387,10 @@ const Home = () => {
           </Button>
         </Stack>
         <Stack direction={"column"} padding="20px" gap="0px"></Stack>
-
         <Canvas dpr={[1, 2]} shadows camera={{ position: [-5, 5, 5], fov: 18 }}>
           <ambientLight />
           <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 3]} castShadow />
           <Physics allowSleep={true}>
-            <Plane />
             <Cube />
           </Physics>
         </Canvas>

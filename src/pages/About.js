@@ -12,19 +12,6 @@ import image2 from "../DRONE4.jpg";
 import image3 from "../DRONE5.jpg";
 import Cube from "./components/Cube";
 
-function Plane(props) {
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
-    ...props,
-  }));
-  return (
-    <mesh receiveShadow ref={ref}>
-      <planeGeometry args={[1000, 1000]} />
-      <meshStandardMaterial color="#000" />
-    </mesh>
-  );
-}
-
 const About = () => {
   moment.locale("id");
   const [hoursTime, setHoursTime] = useState("");
@@ -96,7 +83,6 @@ const About = () => {
           <ambientLight />
           <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 3]} castShadow />
           <Physics allowSleep={true}>
-            <Plane />
             <Cube />
           </Physics>
         </Canvas>

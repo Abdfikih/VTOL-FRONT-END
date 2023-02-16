@@ -259,7 +259,6 @@ const Controls = () => {
           <ambientLight />
           <spotLight angle={0.25} penumbra={0.5} position={[10, 10, 3]} castShadow />
           <Physics allowSleep={true}>
-            <Plane />
             <Cube />
           </Physics>
         </Canvas>
@@ -372,84 +371,3 @@ const Controls = () => {
 };
 
 export default Controls;
-
-// const MqttClient = () => {
-//   const [droneStatus, setDroneStatus] = useState({});
-//   const [dronePosition, setDronePosition] = useState({});
-//   const [droneBattery, setDroneBattery] = useState(0);
-
-//   useEffect(() => {
-//     const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
-
-//     client.on(
-//       "connect",
-//       () => {
-//         client.subscribe("drone/status");
-//         client.on("message", (topic, message) => {
-//           if (topic === "drone/status") {
-//             setDroneStatus(JSON.parse(message));
-//           }
-//         });
-
-//         client.subscribe("drone/position");
-//         client.on("message", (topic, message) => {
-//           if (topic === "drone/position") {
-//             setDronePosition(JSON.parse(message));
-//           }
-//         });
-
-//         client.subscribe("drone/battery");
-//         client.on("message", (topic, message) => {
-//           if (topic === "drone/battery") {
-//             setDroneBattery(message);
-//           }
-//         });
-//         return () => {
-//           client.end();
-//         };
-//       },
-//       []
-//     );
-//   }, []);
-
-//   return (
-//     <div>
-//       <div className="flex mx-20">{<Drone />}</div>
-//       {/* <Typography
-//         sx={{
-//           color: "#BA365D",
-//           fontSize: "30px",
-//           margin: "20px auto",
-//           fontWeight: "bold",
-//         }}
-//         textAlign="center"
-//       >
-//         Drone Status: {droneStatus}
-//       </Typography>
-//       <Typography
-//         sx={{
-//           color: "#BA365D",
-//           fontSize: "30px",
-//           margin: "20px auto",
-//           fontWeight: "bold",
-//         }}
-//         textAlign="center"
-//       >
-//         Drone Position: {dronePosition}
-//       </Typography>
-
-//       <Typography
-//         sx={{
-//           color: "#BA365D",
-//           fontSize: "30px",
-//           margin: "20px auto",
-//           fontWeight: "bold",
-//         }}
-//         textAlign="center"
-//       >
-//         Drone Battery: {droneBattery}%
-//       </Typography> */}
-//     </div>
-//   );
-// };
-// export default MqttClient;

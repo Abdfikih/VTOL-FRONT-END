@@ -18,7 +18,7 @@ function Cube() {
       roll: prevAttitude.roll + 0.01,
     }));
     setRotation([attitude.yaw, attitude.pitch, attitude.roll]);
-    setPosition([0, Math.sin(clock.getElapsedTime()), 0]);
+    setPosition([0, Math.sin(clock.getElapsedTime()) * 0.5, 0]);
   });
 
   return (
