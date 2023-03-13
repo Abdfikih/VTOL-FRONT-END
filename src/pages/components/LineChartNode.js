@@ -1,27 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import axios from "axios";
 
-function LineChartNode({ temp, humid, moist, title }) {
-  // const { temp, humid, pressure, ozone } = data;
-  const labels = [1, 2, 3, 4];
+function LineChartNode({ title, node }) {
+  const [data, setData] = useState({
+    temperature: [],
+    humidity: [],
+    moisture: [],
+    timestamp: [],
+  });
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get(`http://localhost:5000/updatenode/${node}`);
+      const data = response.data;
+      setData({
+        temperature: data.map((item) => item.temperature).reverse(),
+        humidity: data.map((item) => item.humidity).reverse(),
+        moisture: data.map((item) => item.moisture).reverse(),
+        timestamp: data.map((item) => item.timestamp).reverse(),
+      });
+    }
+    fetchData();
+  }, [data]);
+
+  const labels = data.timestamp;
   const datasets = [
     {
       label: "Temperature",
-      data: temp,
+      data: data.temperature,
       backgroundColor: "rgba(255, 99, 132, 0.2)",
       borderColor: "rgba(255, 99, 132, 1)",
       borderWidth: 1,
     },
     {
       label: "Humidity",
-      data: humid,
+      data: data.humidity,
       backgroundColor: "rgba(54, 162, 235, 0.2)",
       borderColor: "rgba(54, 162, 235, 1)",
       borderWidth: 1,
     },
     {
       label: "Moisture",
-      data: moist,
+      data: data.moisture,
       backgroundColor: "rgba(255, 206, 86, 0.2)",
       borderColor: "rgba(255, 206, 86, 1)",
       borderWidth: 1,

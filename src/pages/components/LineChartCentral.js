@@ -1,34 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import axios from "axios";
 
-function LineChartCentral({ data, title }) {
-  // const { temp, humid, pressure, ozone } = data;
-  const labels = [1, 2, 3, 4];
+function LineChartCentral({ title }) {
+  const [data, setData] = useState({
+    temperature: [],
+    humidity: [],
+    pressure: [],
+    ozone: [],
+    timestamp: [],
+  });
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get("http://localhost:5000/updatecentral");
+      const data = response.data;
+      setData({
+        temperature: data.map((item) => item.temperature).reverse(),
+        humidity: data.map((item) => item.humidity).reverse(),
+        pressure: data.map((item) => item.pressure).reverse(),
+        ozone: data.map((item) => item.ozone).reverse(),
+        timestamp: data.map((item) => item.timestamp).reverse(),
+      });
+    }
+    fetchData();
+  }, [data]);
+
+  const labels = data.timestamp;
+
   const datasets = [
     {
       label: "Temperature",
-      data: [25, 26, 27, 28, 29],
+      data: data.temperature,
       backgroundColor: "rgba(255, 99, 132, 0.2)",
       borderColor: "rgba(255, 99, 132, 1)",
       borderWidth: 1,
     },
     {
       label: "Humidity",
-      data: [40, 42, 39, 38, 37],
+      data: data.humidity,
       backgroundColor: "rgba(54, 162, 235, 0.2)",
       borderColor: "rgba(54, 162, 235, 1)",
       borderWidth: 1,
     },
     {
       label: "Pressure",
-      data: [60, 65, 63, 61, 59],
+      data: data.pressure,
       backgroundColor: "rgba(255, 206, 86, 0.2)",
       borderColor: "rgba(255, 206, 86, 1)",
       borderWidth: 1,
     },
     {
       label: "Ozone",
-      data: [100, 105, 102, 110, 115],
+      data: data.ozone,
       backgroundColor: "rgba(75, 192, 192, 0.2)",
       borderColor: "rgba(75, 192, 192, 1)",
       borderWidth: 1,
@@ -44,4 +68,5 @@ function LineChartCentral({ data, title }) {
     </>
   );
 }
+
 export default LineChartCentral;

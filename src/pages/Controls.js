@@ -24,19 +24,6 @@ var options = {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-function Plane(props) {
-  const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
-    ...props,
-  }));
-  return (
-    <mesh receiveShadow ref={ref}>
-      <planeGeometry args={[1000, 1000]} />
-      <meshStandardMaterial color="#000" />
-    </mesh>
-  );
-}
-
 const handleTakeOff = () => {
   let hasPublished = false;
   const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);

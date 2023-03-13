@@ -108,7 +108,11 @@ const About = () => {
           </Stack>
         </div>
         <div>
-          <ParagraphView text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." />
+          <ParagraphView
+            text="Our goal is to create a system called 'Crop Monitoring with Automated UAV Spray Response,' which utilizes technology to safeguard crop quality against weather factors and pests. This system has the potential to enhance the economy of developing countries by assisting farmers in minimizing costs. Precise farming techniques can be facilitated with GPS technologies, which enable data collection, field mapping, farm planning, and yield management. Moreover, GPS technologies can be used to provide automated directions to UAVs.
+This Project comprehensive monitoring and spraying system that involves monitoring various parameters in each crop, such as moisture, humidity, and temperature. These parameters will be transmitted to a central module, which includes a Bosch Sensortec BME688 gas sensor, global position data from each sensor, and an internet connection for remote or cloud-based monitoring. If any crops are identified as underwatered or at risk due to gas presence, ozone, temperature, moisture, or humidity levels, the central module will trigger the HoverGames Drone UAV to take off and spray the designated location with water or pesticide. The UAV is equipped with an i.MX 8M companion computer for pest tracking and precision landing, as well as a Telemetry Radio for relaying the UAV's condition to the central module and the user. Once the spraying task is completed, the UAV will autonomously return to its base.
+"
+          />
         </div>
       </Box>
     </Stack>

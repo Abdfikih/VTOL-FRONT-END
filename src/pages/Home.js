@@ -17,6 +17,10 @@ import Cube from "./components/Cube";
 import LineChartCentral from "./components/LineChartCentral";
 import LineChartNode from "./components/LineChartNode";
 import LocationPin from "./components/LocationPin";
+import LocationDrone from "./components/LocationDrone";
+import { FaPlane } from "react-icons/fa";
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 var options = {
   port: 38789,
@@ -32,6 +36,7 @@ const Home = () => {
   moment.locale("id");
   const [hoursTime, setHoursTime] = useState("");
   const [daysTime, setDaysTime] = useState("");
+  const [timeStamp, SetTimeStamp] = useState("");
   const [mapsFlight, setMapsFlight] = useState([]);
   const [mapsFlightLtd, setMapsFlightLtd] = useState([]);
   const [mapsFlightLng, setMapsFlightLng] = useState([]);
@@ -96,6 +101,30 @@ const Home = () => {
   });
 
   const [titik, setTitik] = useState(0);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get("http://localhost:5000/updatesumnode");
+      const dataTitik = response.data;
+      if (dataTitik.length > 0 && dataTitik[0].angka > 0) {
+        setTitik(dataTitik[0].angka);
+      } else if (titik > 0) {
+        const dataSum = {
+          id: 1,
+          angka: titik,
+        };
+        try {
+          console.log("Data SUM: ", dataSum);
+          await axios.post("http://localhost:5000/insertsumnode", dataSum);
+          console.log("Data Central sent to the backend");
+        } catch (error) {
+          console.error("Error sending data to the backend: ", error);
+        }
+      }
+    }
+    fetchData();
+  }, [titik]);
+
   const [mapType, setMapType] = useState("roadmap");
 
   const handleViewChange = () => {
@@ -106,6 +135,10 @@ const Home = () => {
     center: {
       lat: attitude.lat,
       lng: attitude.lng,
+    },
+    fly: {
+      lat: -6.3648,
+      lng: 106.8245,
     },
     zoom: 18,
     options: {
@@ -123,9 +156,29 @@ const Home = () => {
     setMapsFlightLtd([]);
     setMapsFlightLng([]);
     setTitik(0);
+
+    axios
+      .post("http://localhost:5000/resetsum")
+      .then((response) => {
+        console.log(response.data); // log the response from the server
+      })
+      .catch((error) => {
+        console.log(error); // log any errors that occurred during the request
+      });
+
+    axios
+      .post("http://localhost:5000/resetcor")
+      .then((response) => {
+        console.log(response.data); // log the response from the server
+      })
+      .catch((error) => {
+        console.log(error); // log any errors that occurred during the request
+      });
   };
+
   useEffect(() => {
     const interval = setInterval(() => {
+      SetTimeStamp(moment().format("HH:mm"));
       setHoursTime(moment().format("H:mm:ss"));
       setDaysTime(moment().format("ddd, DD MMMM YYYY"));
     }, 1000);
@@ -209,38 +262,120 @@ const Home = () => {
   const [shouldSkip, setShouldSkip] = useState(true);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setShouldSkip(false);
+    const intervalId = setInterval(() => {
+      const currentTime = new Date();
+      const minutes = currentTime.getMinutes();
+      const seconds = currentTime.getSeconds();
+      const milliseconds = currentTime.getMilliseconds();
+
+      // Calculate the time remaining until the next 10-minute mark
+      const timeUntilNextTenMinutes = (2 - (minutes % 2)) * 60 * 1000 - seconds * 1000 - milliseconds;
+
+      setTimeout(() => {
+        setShouldSkip(false);
+      });
     }, 5000);
 
     return () => {
-      clearTimeout(timeoutId);
+      clearInterval(intervalId);
     };
   }, [shouldSkip]);
 
+  const [dataCor, setDataCor] = useState({
+    node: [],
+    latitude: [],
+    longitude: [],
+    coordinate: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async (a) => {
+      try {
+        console.log("masuk fetch");
+        const response = await axios.get(`http://localhost:5000/updatecoordinate/${a}`);
+        const data = response.data;
+
+        if (data.length !== 0) {
+          setDataCor({
+            node: data.map((item) => item.node),
+            latitude: data.map((item) => item.latitude),
+            longitude: data.map((item) => item.longitude),
+            coordinate: data.map((item) => item.coordinate),
+          });
+
+          setMapsFlight((prevArr) => [...prevArr, data.map((item) => JSON.parse(item.coordinate))]);
+          setMapsFlightLtd((prevArr) => [...prevArr, data.map((item) => item.latitude)]);
+          setMapsFlightLng((prevArr) => [...prevArr, data.map((item) => item.longitude)]);
+
+          console.log("inc : ", a);
+        } else {
+          console.log(`No data returned for ${a}`);
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    for (let a = 1; a <= titik; a++) {
+      fetchData(a);
+    }
+  }, [titik]);
+
+  useEffect(() => {
+    console.log("Data Cor : ", mapsFlight[0]);
+    console.log("Data Cor : ", mapsFlight[1]);
+    console.log("Data Cor : ", mapsFlight[2]);
+  }, [dataCor, mapsFlight]);
+
   useEffect(() => {
     const sendData = async () => {
+      const dataCentral = {
+        temperature: centralTemp,
+        humidity: centralHumid,
+        pressure: centralPress,
+        ozone: centralGas,
+        timestamp: timeStamp,
+      };
+      try {
+        console.log("Data Central : ", dataCentral);
+        if (!shouldSkip) {
+          axios.post("http://localhost:5000/insertcentral", dataCentral);
+          console.log("Data Central sent to the backend");
+        }
+      } catch (error) {
+        console.error("Error sending data to the backend: ", error);
+      }
+
       for (let i = 1; i <= titik; i++) {
-        const data = {
+        const dataCoordinate = {
+          node: i,
+          latitude: mapsFlightLtd[i - 1],
+          longitude: mapsFlightLng[i - 1],
+          coordinate: mapsFlight[i - 1],
+        };
+        const dataNode = {
           node: i,
           temperature: arrTemp[i - 1],
           humidity: arrHumid[i - 1],
           moisture: arrMoist[i - 1],
+          timestamp: timeStamp,
         };
-        console.log("Data: ", data);
+        console.log("Data Node : ", dataNode);
         try {
           if (!shouldSkip) {
-            axios.post("http://localhost:3000/insertnode", data);
-            console.log("Data sent to the backend");
-            setShouldSkip(true);
+            axios.post("http://localhost:5000/insertcoordinate", dataCoordinate);
+            axios.post("http://localhost:5000/insertnode", dataNode);
+            console.log("Data Node sent to the backend");
+            console.log(mapsFlight[i - 1]);
           }
         } catch (error) {
           console.error("Error sending data to the backend: ", error);
         }
       }
+      setShouldSkip(true);
     };
     sendData();
-  }, [arrTemp, arrHumid, arrMoist, titik, shouldSkip]);
+  }, [arrTemp, arrHumid, arrMoist, shouldSkip, mapsFlight, mapsFlightLng, mapsFlightLtd]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -337,12 +472,6 @@ const Home = () => {
     fetchData();
   }, [data, start]);
 
-  console.log("tes12333");
-  console.log(arrHumid[0]);
-  console.log(arrHumid[1]);
-  console.log(nodeTemp[0]);
-  console.log(nodeTemp[1]);
-
   return (
     <Stack direction={"row"} gap={"30px"}>
       <Stack flexBasis={"25%"} width={"80%"} maxWidth={"25%"} alignItems="center" gap="10px" sx={{ background: "#000000", height: "100vh", padding: "30px" }}>
@@ -423,7 +552,7 @@ const Home = () => {
               defaultZoom={defaultProps.zoom}
               options={{ mapTypeId: mapType }}
               onClick={(e) => {
-                if (mapsFlight.length < titik) {
+                if (mapsFlightLtd.length < titik) {
                   let arr = [...mapsFlight];
                   let arr1 = [...mapsFlightLtd];
                   let arr2 = [...mapsFlightLng];
@@ -447,9 +576,10 @@ const Home = () => {
                 }
               }}
             >
-              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" />
-              {mapsFlight?.map((data, idx) => (
-                <LocationPin lat={data.lat} lng={data.lng} text={`Node ke-${idx + 1}`} color="yellow" />
+              <LocationDrone lat={defaultProps.fly.lat} lng={defaultProps.fly.lng} text="Drone" color="white" startLat={defaultProps.fly.lat} startLong={defaultProps.fly.lng} />
+              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Central" color="red" />
+              {mapsFlightLtd?.map((lat, idx) => (
+                <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ke-${idx + 1}`} color="yellow" />
               ))}
             </GoogleMapReact>
           </Stack>
@@ -558,10 +688,10 @@ const Home = () => {
           </div>
 
           <MDBContainer>
-            <LineChartCentral data={data} title={"Line Chart Central"} />
+            <LineChartCentral title={"Line Chart Central"} />
             {nodes.slice(0, titik).map((node, index) => (
               <>
-                <LineChartNode temp={nodeTemp[index]} humid={nodeHumid[index]} moist={nodeHumid[index]} title={`Line Chart Node ${index + 1}`} />
+                <LineChartNode title={`Line Chart Node ${index + 1}`} node={index + 1} />
               </>
             ))}
           </MDBContainer>
