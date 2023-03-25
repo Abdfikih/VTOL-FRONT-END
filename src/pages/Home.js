@@ -104,7 +104,7 @@ const Home = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("http://localhost:5000/updatesumnode");
+      const response = await axios.get("https://vtol-cigritous-backend.herokuapp.com/updatesumnode");
       const dataTitik = response.data;
       if (dataTitik.length > 0 && dataTitik[0].angka > 0) {
         setTitik(dataTitik[0].angka);
@@ -115,7 +115,7 @@ const Home = () => {
         };
         try {
           console.log("Data SUM: ", dataSum);
-          await axios.post("http://localhost:5000/insertsumnode", dataSum);
+          await axios.post("https://vtol-cigritous-backend.herokuapp.com/insertsumnode", dataSum);
           console.log("Data Central sent to the backend");
         } catch (error) {
           console.error("Error sending data to the backend: ", error);
@@ -158,7 +158,7 @@ const Home = () => {
     setTitik(0);
 
     axios
-      .post("http://localhost:5000/resetsum")
+      .post("https://vtol-cigritous-backend.herokuapp.com/resetsum")
       .then((response) => {
         console.log(response.data); // log the response from the server
       })
@@ -167,7 +167,7 @@ const Home = () => {
       });
 
     axios
-      .post("http://localhost:5000/resetcor")
+      .post("https://vtol-cigritous-backend.herokuapp.com/resetcor")
       .then((response) => {
         console.log(response.data); // log the response from the server
       })
@@ -292,7 +292,7 @@ const Home = () => {
     const fetchData = async (a) => {
       try {
         console.log("masuk fetch");
-        const response = await axios.get(`http://localhost:5000/updatecoordinate/${a}`);
+        const response = await axios.get(`https://vtol-cigritous-backend.herokuapp.com/updatecoordinate/${a}`);
         const data = response.data;
 
         if (data.length !== 0) {
@@ -339,7 +339,7 @@ const Home = () => {
       try {
         console.log("Data Central : ", dataCentral);
         if (!shouldSkip) {
-          axios.post("http://localhost:5000/insertcentral", dataCentral);
+          axios.post("https://vtol-cigritous-backend.herokuapp.com/insertcentral", dataCentral);
           console.log("Data Central sent to the backend");
         }
       } catch (error) {
@@ -363,8 +363,8 @@ const Home = () => {
         console.log("Data Node : ", dataNode);
         try {
           if (!shouldSkip) {
-            axios.post("http://localhost:5000/insertcoordinate", dataCoordinate);
-            axios.post("http://localhost:5000/insertnode", dataNode);
+            axios.post("https://vtol-cigritous-backend.herokuapp.com/insertcoordinate", dataCoordinate);
+            axios.post("https://vtol-cigritous-backend.herokuapp.com/insertnode", dataNode);
             console.log("Data Node sent to the backend");
             console.log(mapsFlight[i - 1]);
           }

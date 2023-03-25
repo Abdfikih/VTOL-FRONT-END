@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Stack, Typography, Grid, Card, Box } from "@mui/material";
 import logo from "../logo_0.png";
 import moment from "moment/moment";
+import axios from "axios";
 import { Canvas } from "react-three-fiber";
 import { Physics, usePlane } from "@react-three/cannon";
 import GoogleMapReact from "google-map-react";
@@ -65,6 +66,8 @@ const Controls = () => {
   const [mapsFlight, setMapsFlight] = useState([]);
   const [droneFlightLtd, setDroneFlightLtd] = useState([]);
   const [droneFlightLng, setDroneFlightLng] = useState([]);
+  const [mapsFlightLtd, setMapsFlightLtd] = useState([]);
+  const [mapsFlightLng, setMapsFlightLng] = useState([]);
   const [droneStatus, setDroneStatus] = useState([]);
   const [droneBattery, setDroneBattery] = useState([]);
   const [droneAltitude, setDroneAltitude] = useState([]);
@@ -77,6 +80,31 @@ const Controls = () => {
 
   let arrCoor = [...mapsFlight];
 
+  const [titik, setTitik] = useState(0);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get("https://vtol-cigritous-backend.herokuapp.com/updatesumnode");
+      const dataTitik = response.data;
+      if (dataTitik.length > 0 && dataTitik[0].angka > 0) {
+        setTitik(dataTitik[0].angka);
+      } else if (titik > 0) {
+        const dataSum = {
+          id: 1,
+          angka: titik,
+        };
+        try {
+          console.log("Data SUM: ", dataSum);
+          await axios.post("https://vtol-cigritous-backend.herokuapp.com/insertsumnode", dataSum);
+          console.log("Data Central sent to the backend");
+        } catch (error) {
+          console.error("Error sending data to the backend: ", error);
+        }
+      }
+    }
+    fetchData();
+  }, [titik]);
+
   let totalNode = 20;
 
   const nodes = [];
@@ -84,6 +112,46 @@ const Controls = () => {
   for (let index = 1; index <= totalNode; index++) {
     nodes.push(index);
   }
+
+  const [dataCor, setDataCor] = useState({
+    node: [],
+    latitude: [],
+    longitude: [],
+    coordinate: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async (a) => {
+      try {
+        console.log("masuk fetch");
+        const response = await axios.get(`https://vtol-cigritous-backend.herokuapp.com/updatecoordinate/${a}`);
+        const data = response.data;
+
+        if (data.length !== 0) {
+          setDataCor({
+            node: data.map((item) => item.node),
+            latitude: data.map((item) => item.latitude),
+            longitude: data.map((item) => item.longitude),
+            coordinate: data.map((item) => item.coordinate),
+          });
+
+          setMapsFlight((prevArr) => [...prevArr, data.map((item) => JSON.parse(item.coordinate))]);
+          setMapsFlightLtd((prevArr) => [...prevArr, data.map((item) => item.latitude)]);
+          setMapsFlightLng((prevArr) => [...prevArr, data.map((item) => item.longitude)]);
+
+          console.log("inc : ", a);
+        } else {
+          console.log(`No data returned for ${a}`);
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    for (let a = 1; a <= titik; a++) {
+      fetchData(a);
+    }
+  }, [titik]);
 
   const [hoverCard, setHoverCard] = useState(Array(nodes.length).fill(false));
   const [hoverDashboard, setHoverDashboard] = useState(false);
@@ -114,7 +182,6 @@ const Controls = () => {
     lat: -6.365232,
     lng: 106.824506,
   });
-  const [titik, setTitik] = useState(0);
 
   const defaultProps = {
     center: {
@@ -145,6 +212,9 @@ const Controls = () => {
     const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
     client.on("connect", () => {
       console.log("MQTT client connected to the server.");
+      client.subscribe("/drone/status");
+      client.subscribe("/drone/battery");
+      client.subscribe("/drone/progress");
       client.subscribe("/drone/lat");
       client.subscribe("/drone/lng");
       client.subscribe("/drone/alt");
@@ -161,6 +231,19 @@ const Controls = () => {
     console.log("masuk config");
     client.on("message", (topic, message) => {
       console.log("tessss");
+      if (topic === "/drone/status") {
+        if (message.toString() === "0") {
+          setDroneStatus("Disarmed");
+        } else if (message.toString() === "1") {
+          setDroneStatus("Armed");
+        }
+      }
+      if (topic === "/drone/battery") {
+        setDroneBattery(message.toString());
+      }
+      if (topic === "/drone/progress") {
+        setDroneProgress(message.toString());
+      }
       if (topic === "/drone/lat") {
         setDroneFlightLtd(message.toString());
       }
@@ -285,8 +368,8 @@ const Controls = () => {
               options={{ mapTypeId: mapType }}
             >
               <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" />
-              {mapsFlight?.map((data, idx) => (
-                <LocationPin lat={data.lat} lng={data.lng} text={`Node ke-${idx + 1}`} color="yellow" />
+              {mapsFlightLtd?.map((lat, idx) => (
+                <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ke-${idx + 1}`} color="yellow" />
               ))}
             </GoogleMapReact>
           </Stack>

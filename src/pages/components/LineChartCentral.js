@@ -13,7 +13,7 @@ function LineChartCentral({ title }) {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get("http://localhost:5000/updatecentral");
+      const response = await axios.get("https://vtol-cigritous-backend.herokuapp.com/updatecentral");
       const data = response.data;
       setData({
         temperature: data.map((item) => item.temperature).reverse(),

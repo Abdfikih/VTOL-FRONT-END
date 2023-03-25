@@ -12,7 +12,7 @@ function LineChartNode({ title, node }) {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(`http://localhost:5000/updatenode/${node}`);
+      const response = await axios.get(`https://vtol-cigritous-backend.herokuapp.com/updatenode/${node}`);
       const data = response.data;
       setData({
         temperature: data.map((item) => item.temperature).reverse(),
