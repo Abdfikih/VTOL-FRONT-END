@@ -14,6 +14,7 @@ import CorCard from "./components/CoordinateCard";
 import Cube from "./components/Cube";
 import LocationPin from "./components/LocationPin";
 import SensorCard from "./components/SensorCard";
+import LocationDrone from "./components/LocationDrone";
 
 var options = {
   port: 38789,
@@ -187,6 +188,10 @@ const Controls = () => {
     center: {
       lat: attitude.lat,
       lng: attitude.lng,
+    },
+    fly: {
+      lat: -6.3648,
+      lng: 106.8245,
     },
     zoom: 18,
     options: {
@@ -367,6 +372,7 @@ const Controls = () => {
               defaultZoom={defaultProps.zoom}
               options={{ mapTypeId: mapType }}
             >
+              <LocationDrone lat={defaultProps.fly.lat} lng={defaultProps.fly.lng} text="Drone" color="white" startLat={defaultProps.fly.lat} startLong={defaultProps.fly.lng} />
               <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" />
               {mapsFlightLtd?.map((lat, idx) => (
                 <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ke-${idx + 1}`} color="yellow" />
