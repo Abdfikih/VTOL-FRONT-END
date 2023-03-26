@@ -102,16 +102,17 @@ const About = () => {
         </Typography>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           <Stack direction={"row"} gap={"20px"}>
-            <img src={image1} alt="Image 1" width="300px" style={{ borderRadius: "50%", border: "5px solid #3D3356" }} />
-            <img src={image2} alt="Image 2" width="300px" style={{ borderRadius: "50%", border: "5px solid #3D3356" }} />
-            <img src={image3} alt="Image 3" width="300px" style={{ borderRadius: "50%", border: "5px solid #3D3356" }} />
+            <img src={image1} alt="Image 1" width="250px" style={{ borderRadius: "50%", border: "5px solid #3D3356" }} />
+            <img src={image2} alt="Image 2" width="250px" style={{ borderRadius: "50%", border: "5px solid #3D3356" }} />
+            <img src={image3} alt="Image 3" width="250px" style={{ borderRadius: "50%", border: "5px solid #3D3356" }} />
           </Stack>
         </div>
         <div>
           <ParagraphView
             text="Our goal is to create a system called 'Crop Monitoring with Automated UAV Spray Response,' which utilizes technology to safeguard crop quality against weather factors and pests. This system has the potential to enhance the economy of developing countries by assisting farmers in minimizing costs. Precise farming techniques can be facilitated with GPS technologies, which enable data collection, field mapping, farm planning, and yield management. Moreover, GPS technologies can be used to provide automated directions to UAVs.
-This Project comprehensive monitoring and spraying system that involves monitoring various parameters in each crop, such as moisture, humidity, and temperature. These parameters will be transmitted to a central module, which includes a Bosch Sensortec BME688 gas sensor, global position data from each sensor, and an internet connection for remote or cloud-based monitoring. If any crops are identified as underwatered or at risk due to gas presence, ozone, temperature, moisture, or humidity levels, the central module will trigger the HoverGames Drone UAV to take off and spray the designated location with water or pesticide. The UAV is equipped with an i.MX 8M companion computer for pest tracking and precision landing, as well as a Telemetry Radio for relaying the UAV's condition to the central module and the user. Once the spraying task is completed, the UAV will autonomously return to its base.
-"
+            This Project comprehensive monitoring and spraying system that involves monitoring various parameters in each crop, such as moisture, humidity, and temperature. These parameters will be transmitted to a central module, which includes a Bosch Sensortec BME688 gas sensor, global position data from each sensor, and an internet connection for remote or cloud-based monitoring.
+            
+            If any crops are identified as underwatered or at risk due to gas presence, ozone, temperature, moisture, or humidity levels, the central module will trigger the HoverGames Drone UAV to take off and spray the designated location with water or pesticide. The UAV is equipped with an i.MX 8M companion computer for pest tracking and precision landing, as well as a Telemetry Radio for relaying the UAV's condition to the central module and the user. Once the spraying task is completed, the UAV will autonomously return to its base."
           />
         </div>
       </Box>
