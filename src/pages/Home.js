@@ -221,10 +221,10 @@ const Home = () => {
           setDroneFlightLtd(message.toString());
         }
         if (topic === "/drone/lng") {
-          setAttitude(message.toString());
+          setDroneFlightLng(message.toString());
         }
         if (topic === "/central/temp") {
-          setDroneFlightLng(message.toString());
+          setCentralTemp(message.toString());
         }
         if (topic === "/central/press") {
           setCentralPress(message.toString());
