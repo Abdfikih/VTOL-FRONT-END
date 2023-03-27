@@ -283,7 +283,7 @@ const Controls = () => {
     return () => {
       client.end();
     };
-  }, [mapsFlight]);
+  }, [mapsFlight, droneFlightLng, droneFlightLtd]);
 
   return (
     <Stack direction={"row"} gap={"30px"}>
@@ -372,8 +372,7 @@ const Controls = () => {
               defaultZoom={defaultProps.zoom}
               options={{ mapTypeId: mapType }}
             >
-              <LocationDrone lat={defaultProps.fly.lat} lng={defaultProps.fly.lng} text="Drone" color="white" startLat={defaultProps.fly.lat} startLong={defaultProps.fly.lng} />
-              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Drone" color="red" />
+              <LocationDrone lat={droneFlightLtd} lng={droneFlightLng} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} />
               {mapsFlightLtd?.map((lat, idx) => (
                 <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ke-${idx + 1}`} color="yellow" />
               ))}

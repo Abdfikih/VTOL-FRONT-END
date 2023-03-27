@@ -38,6 +38,8 @@ const Home = () => {
   const [daysTime, setDaysTime] = useState("");
   const [timeStamp, SetTimeStamp] = useState("");
   const [mapsFlight, setMapsFlight] = useState([]);
+  const [droneFlightLtd, setDroneFlightLtd] = useState([]);
+  const [droneFlightLng, setDroneFlightLng] = useState([]);
   const [mapsFlightLtd, setMapsFlightLtd] = useState([]);
   const [mapsFlightLng, setMapsFlightLng] = useState([]);
   const [data, setData] = useState([]);
@@ -195,6 +197,8 @@ const Home = () => {
         client.subscribe("/central/press");
         client.subscribe("/central/humid");
         client.subscribe("/central/gas");
+        client.subscribe("/drone/lat");
+        client.subscribe("/drone/lng");
         for (let i = 1; i <= mapsFlight.length; i++) {
           client.publish("/" + i + "/coordinate", JSON.stringify(mapsFlight[i - 1]), { qos: 0 });
           client.publish("/" + i + "/latitude", JSON.stringify(mapsFlightLtd[i - 1]), { qos: 0 });
@@ -213,8 +217,14 @@ const Home = () => {
       client.on("message", (topic, message) => {
         console.log("tessss");
         console.log(centralGas);
+        if (topic === "/drone/lat") {
+          setDroneFlightLtd(message.toString());
+        }
+        if (topic === "/drone/lng") {
+          setAttitude(message.toString());
+        }
         if (topic === "/central/temp") {
-          setCentralTemp(message.toString());
+          setDroneFlightLng(message.toString());
         }
         if (topic === "/central/press") {
           setCentralPress(message.toString());
@@ -576,8 +586,7 @@ const Home = () => {
                 }
               }}
             >
-              <LocationDrone lat={defaultProps.fly.lat} lng={defaultProps.fly.lng} text="Drone" color="white" startLat={defaultProps.fly.lat} startLong={defaultProps.fly.lng} />
-              <LocationPin lat={defaultProps.center.lat} lng={defaultProps.center.lng} text="Central" color="red" />
+              <LocationDrone lat={droneFlightLtd} lng={droneFlightLng} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} />
               {mapsFlightLtd?.map((lat, idx) => (
                 <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ke-${idx + 1}`} color="yellow" />
               ))}
@@ -612,13 +621,13 @@ const Home = () => {
                   style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[2] ? "0px 0px 20px 0px #000000" : "none" }}
                   onClick={() => setShowCentral(!showCentral)}
                 >
-                  Central
+                  Node 1 (Central)
                 </button>
 
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showCentral && (
                     <>
-                      <CorCard title="Coordinate Position Central" value={"Ltd :  || Lng : "} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
+                      <CorCard title="Coordinate Position Central" value={`Ltd : ${JSON.stringify(mapsFlightLtd[0])} | Lng : ${JSON.stringify(mapsFlightLng[0])}`} handleCardHover={() => handleCardHover(3)} hoverCard={hoverCard[3]} />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
@@ -641,7 +650,7 @@ const Home = () => {
               </>
             )}
 
-            {nodes.slice(0, titik).map((node, index) => (
+            {nodes.slice(1, titik).map((node, index) => (
               <>
                 <button
                   key={index}
@@ -656,27 +665,27 @@ const Home = () => {
                   }}
                   onClick={() => handleNodeClick(index)}
                 >
-                  Node {index + 1}
+                  Node {index + 2}
                 </button>
                 <Stack direction={"column"} padding="20px" gap="10px">
                   {showNode[index] && (
                     <>
                       <CorCard
-                        title={`Coordinate Position Node ${index + 1}`}
-                        value={`Ltd : ${JSON.stringify(mapsFlightLtd[index])} | Lng : ${JSON.stringify(mapsFlightLng[index])}`}
+                        title={`Coordinate Position Node ${index + 2}`}
+                        value={`Ltd : ${JSON.stringify(mapsFlightLtd[index + 1])} | Lng : ${JSON.stringify(mapsFlightLng[index + 1])}`}
                         handleCardHover={() => handleCardHover(index * 3)}
                         hoverCard={hoverCard[index * 3]}
                       />
                       <Stack direction={"column"} padding="20px" gap="10px">
                         <Grid container spacing={2} columns={3} width="100%" justifyContent={"center"}>
                           <Grid item xs={1}>
-                            <SensorCard title={`Temp Node ${index + 1}`} value={`${nodeTemp[index]} °C`} handleCardHover={() => handleCardHover(index * 3 + 1)} hoverCard={hoverCard[index * 3 + 1]} />
+                            <SensorCard title={`Temp Node ${index + 2}`} value={`${nodeTemp[index]} °C`} handleCardHover={() => handleCardHover(index * 3 + 1)} hoverCard={hoverCard[index * 3 + 1]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <SensorCard title={`Humidity Node ${index + 1}`} value={`${nodeHumid[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 2)} hoverCard={hoverCard[index * 3 + 2]} />
+                            <SensorCard title={`Humidity Node ${index + 2}`} value={`${nodeHumid[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 2)} hoverCard={hoverCard[index * 3 + 2]} />
                           </Grid>
                           <Grid item xs={1}>
-                            <SensorCard title={`Moisture Node ${index + 1}`} value={`${nodeMoist[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 3)} hoverCard={hoverCard[index * 3 + 3]} />
+                            <SensorCard title={`Moisture Node ${index + 2}`} value={`${nodeMoist[index]} %`} handleCardHover={() => handleCardHover(index * 3 + 3)} hoverCard={hoverCard[index * 3 + 3]} />
                           </Grid>
                         </Grid>
                       </Stack>
