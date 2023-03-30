@@ -34,7 +34,41 @@ const handleTakeOff = () => {
     () => {
       console.log("MQTT client connected to the server.");
       if (!hasPublished) {
-        client.publish("/drone/take_land", String(1), { qos: 0 });
+        client.publish("/drone/precision_landing", String(1), { qos: 0 });
+        hasPublished = true;
+      }
+      return () => client.end();
+    },
+    []
+  );
+};
+
+const handleDetectCrow = () => {
+  let hasPublished = false;
+  const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
+  client.on(
+    "connect",
+    () => {
+      console.log("MQTT client connected to the server.");
+      if (!hasPublished) {
+        client.publish("/drone/detect_crow", String(1), { qos: 0 });
+        hasPublished = true;
+      }
+      return () => client.end();
+    },
+    []
+  );
+};
+
+const handleNotDetectCrow = () => {
+  let hasPublished = false;
+  const client = mqtt.connect("wss://driver.cloudmqtt.com:1884", options);
+  client.on(
+    "connect",
+    () => {
+      console.log("MQTT client connected to the server.");
+      if (!hasPublished) {
+        client.publish("/drone/detect_crow", String(0), { qos: 0 });
         hasPublished = true;
       }
       return () => client.end();
@@ -51,7 +85,7 @@ const handleLanding = () => {
     () => {
       console.log("MQTT client connected to the server.");
       if (!hasPublished) {
-        client.publish("/drone/take_land", String(0), { qos: 0 });
+        client.publish("/drone/precision_landing", String(0), { qos: 0 });
         hasPublished = true;
       }
       return () => client.end();
@@ -64,6 +98,7 @@ const Controls = () => {
   moment.locale("id");
   const [hoursTime, setHoursTime] = useState("");
   const [daysTime, setDaysTime] = useState("");
+  const [crowCount, setCrowCount] = useState([]);
   const [mapsFlight, setMapsFlight] = useState([]);
   const [droneFlightLtd, setDroneFlightLtd] = useState([]);
   const [droneFlightLng, setDroneFlightLng] = useState([]);
@@ -169,6 +204,8 @@ const Controls = () => {
     setMapType(mapType === "roadmap" ? "satellite" : "roadmap");
   };
 
+  const [crowType, setCrowType] = useState("Not Active");
+
   const handleCardHover = (index) => {
     const newHoverCard = [...hoverCard];
     newHoverCard[index] = !newHoverCard[index];
@@ -218,6 +255,7 @@ const Controls = () => {
     client.on("connect", () => {
       console.log("MQTT client connected to the server.");
       client.subscribe("/drone/status");
+      client.subscribe("/drone/crow_count");
       client.subscribe("/drone/battery");
       client.subscribe("/drone/progress");
       client.subscribe("/drone/lat");
@@ -241,6 +279,13 @@ const Controls = () => {
           setDroneStatus("Disarmed");
         } else if (message.toString() === "1") {
           setDroneStatus("Armed");
+        }
+      }
+      if (topic === "/drone/crow_count") {
+        if (message.toString() === "0") {
+          setCrowCount("False");
+        } else if (message.toString() === "1") {
+          setCrowCount("True");
         }
       }
       if (topic === "/drone/battery") {
@@ -352,14 +397,27 @@ const Controls = () => {
           Controls Unnamed Drone
         </Typography>
         <Stack direction={"row"} gap={"10px"} padding="20px">
-          <button
-            onMouseEnter={() => handleCardHover(24)}
-            onMouseLeave={() => handleCardHover(24)}
-            style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[24] ? "0px 0px 20px 0px #000000" : "none" }}
-            onClick={handleViewChange}
-          >
-            Switch to {mapType === "roadmap" ? "Satellite" : "Roadmap"} view
-          </button>
+          <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <button
+              onMouseEnter={() => handleCardHover(24)}
+              onMouseLeave={() => handleCardHover(24)}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[24] ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={handleViewChange}
+            >
+              Switch to {mapType === "roadmap" ? "Satellite" : "Roadmap"} view
+            </button>
+            <button
+              onMouseEnter={() => handleCardHover(15)}
+              onMouseLeave={() => handleCardHover(15)}
+              style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[6] ? "0px 0px 20px 0px #000000" : "none" }}
+              onClick={() => {
+                setCrowType(crowType === "Deactive" ? "Active" : "Deactive");
+                crowType === "Deactive" ? handleDetectCrow() : handleNotDetectCrow();
+              }}
+            >
+              {crowType === "Deactive" ? "Detect Crow Active" : "Detect Crow Deactive"}
+            </button>
+          </div>
         </Stack>
         <Stack direction={"column"} padding="20px" gap="20px">
           <Stack style={{ height: "50vh", width: "100%" }}>
@@ -413,6 +471,9 @@ const Controls = () => {
                 <SensorCard title="Status Drone" value={droneStatus} handleCardHover={() => handleCardHover(1)} hoverCard={hoverCard[1]} />
               </Grid>
               <Grid item xs={1}>
+                <SensorCard title="Detect Crow" value={crowCount} handleCardHover={() => handleCardHover(13)} hoverCard={hoverCard[13]} />
+              </Grid>
+              <Grid item xs={1}>
                 <SensorCard title="Timestamp Drone" value={droneTimestamp} handleCardHover={() => handleCardHover(9)} hoverCard={hoverCard[9]} />
               </Grid>
               <Grid item xs={1}>
@@ -431,7 +492,7 @@ const Controls = () => {
                   <SensorCard title="Speed Drone (X)" value={droneSpeedX} handleCardHover={() => handleCardHover(4)} hoverCard={hoverCard[4]} />
                 </Grid>
                 <Grid item xs={1}>
-                  <SensorCard title="Speed Drone (Y)" value={droneSpeedY} handleCardHover={() => handleCardHover(10)} hoverCard={hoverCard[10]} />
+                  <SensorCard title="Speed Drone (Y)" value={droneSpeedY} handleCardHover={() => handleCardHover(14)} hoverCard={hoverCard[14]} />
                 </Grid>
                 <Grid item xs={1}>
                   <SensorCard title="Speed Drone (Z)" value={droneSpeedZ} handleCardHover={() => handleCardHover(11)} hoverCard={hoverCard[11]} />
