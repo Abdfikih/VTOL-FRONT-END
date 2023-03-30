@@ -411,11 +411,11 @@ const Controls = () => {
               onMouseLeave={() => handleCardHover(15)}
               style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[6] ? "0px 0px 20px 0px #000000" : "none" }}
               onClick={() => {
-                setCrowType(crowType === "Deactive" ? "Active" : "Deactive");
-                crowType === "Deactive" ? handleDetectCrow() : handleNotDetectCrow();
+                setCrowType(crowType === "Active" ? "Deactive" : "Active");
+                crowType === "Active" ? handleDetectCrow() : handleNotDetectCrow();
               }}
             >
-              {crowType === "Deactive" ? "Detect Crow Active" : "Detect Crow Deactive"}
+              {crowType === "Active" ? "Detect Crow Deactive" : "Detect Crow Active"}
             </button>
           </div>
         </Stack>
