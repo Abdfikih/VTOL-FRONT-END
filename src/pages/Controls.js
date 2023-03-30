@@ -412,7 +412,7 @@ const Controls = () => {
               style={{ backgroundColor: "#3D3356", color: "white", padding: "10px 30px", border: "none", boxShadow: hoverCard[6] ? "0px 0px 20px 0px #000000" : "none" }}
               onClick={() => {
                 setCrowType(crowType === "Active" ? "Deactive" : "Active");
-                crowType === "Active" ? handleDetectCrow() : handleNotDetectCrow();
+                crowType === "Active" ? handleNotDetectCrow() : handleDetectCrow();
               }}
             >
               {crowType === "Active" ? "Detect Crow Deactive" : "Detect Crow Active"}
