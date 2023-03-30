@@ -201,8 +201,8 @@ const Home = () => {
         client.subscribe("/drone/lng");
         for (let i = 1; i <= mapsFlight.length; i++) {
           client.publish("/" + i + "/coordinate", JSON.stringify(mapsFlight[i - 1].join()).toString, { qos: 0 });
-          client.publish("/" + i + "/latitude", mapsFlightLtd[i - 1], { qos: 0 });
-          client.publish("/" + i + "/longitude", mapsFlightLng[i - 1], { qos: 0 });
+          client.publish("/" + i + "/latitude", parseFloat(mapsFlightLtd[i - 1]).toFixed(6), { qos: 0 });
+          client.publish("/" + i + "/longitude", parseFloat(mapsFlightLng[i - 1]).toFixed(6), { qos: 0 });
         }
         for (let i = 1; i <= 20; i++) {
           client.subscribe("/" + i + "/temp");
