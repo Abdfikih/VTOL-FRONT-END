@@ -200,7 +200,7 @@ const Home = () => {
         client.subscribe("/drone/lat");
         client.subscribe("/drone/lng");
         for (let i = 1; i <= mapsFlight.length; i++) {
-          client.publish("/" + i + "/coordinate", JSON.stringify(mapsFlight[i - 1].join()), { qos: 0 });
+          client.publish("/" + i + "/coordinate", JSON.stringify(mapsFlight[i - 1]), { qos: 0 });
           client.publish(
             "/" + i + "/latitude",
             parseFloat(mapsFlightLtd[i - 1])
