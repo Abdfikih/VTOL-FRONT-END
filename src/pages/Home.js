@@ -599,7 +599,7 @@ const Home = () => {
                 }
               }}
             >
-              <LocationDrone lat={droneFlightLtd} lng={droneFlightLng} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} />
+              <LocationDrone lat={-6.3606480106629} lng={106.824251935584} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} />
               {mapsFlightLtd?.map((lat, idx) => (
                 <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ke-${idx + 1}`} color="yellow" />
               ))}
