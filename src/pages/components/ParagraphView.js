@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const ParagraphView = ({ text, typeSpeed = 20 }) => {
+const ParagraphView = ({ text, typeSpeed = 15 }) => {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const ParagraphView = ({ text, typeSpeed = 20 }) => {
     return () => clearInterval(typeInterval);
   }, [text, typeSpeed]);
 
-  return <p style={{ textAlign: "center", marginTop: "5vh", transform: "translateY(0%)", margin: "10% 10%" }}>{displayedText}</p>;
+  return <p style={{ textAlign: "center", marginTop: "0vh", transform: "translateY(0%)", margin: "10% 10%" }}>{displayedText}</p>;
 };
 
 export default ParagraphView;

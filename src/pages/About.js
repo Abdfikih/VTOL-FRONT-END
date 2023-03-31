@@ -7,9 +7,9 @@ import { Canvas, useFrame, useThree } from "react-three-fiber";
 import { Physics, usePlane, useBox } from "@react-three/cannon";
 import Button from "@mui/material/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
-import image1 from "../DRONE2.jpeg";
-import image2 from "../DRONE4.jpg";
-import image3 from "../DRONE5.jpg";
+import image1 from "../DRONE2.PNG";
+import image2 from "../DRONE4.PNG";
+import image3 from "../DRONE5.PNG";
 import Cube from "./components/Cube";
 
 const About = () => {
