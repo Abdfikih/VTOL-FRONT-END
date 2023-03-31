@@ -15,7 +15,7 @@ const ParagraphView = ({ text, typeSpeed = 15 }) => {
     return () => clearInterval(typeInterval);
   }, [text, typeSpeed]);
 
-  return <p style={{ textAlign: "center", marginTop: "0vh", transform: "translateY(0%)", margin: "10% 10%" }}>{displayedText}</p>;
+  return <p style={{ textAlign: "center", marginTop: "0vh", transform: "translateY(0%)", margin: "5% 10%" }}>{displayedText}</p>;
 };
 
 export default ParagraphView;
