@@ -599,9 +599,9 @@ const Home = () => {
                 }
               }}
             >
-              <LocationDrone lat={-6.3606480106629} lng={106.824251935584} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} />
+              <LocationDrone lat={droneFlightLtd} lng={droneFlightLng} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} />
               {mapsFlightLtd?.map((lat, idx) => (
-                <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ke-${idx + 1}`} color="yellow" />
+                <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ${idx + 1}`} color="yellow" />
               ))}
             </GoogleMapReact>
           </Stack>
@@ -711,9 +711,9 @@ const Home = () => {
 
           <MDBContainer>
             <LineChartCentral title={"Line Chart Central"} />
-            {nodes.slice(0, titik).map((node, index) => (
+            {nodes.slice(1, titik).map((node, index) => (
               <>
-                <LineChartNode title={`Line Chart Node ${index + 1}`} node={index + 1} />
+                <LineChartNode title={`Line Chart Node ${index + 2}`} node={index + 2} />
               </>
             ))}
           </MDBContainer>

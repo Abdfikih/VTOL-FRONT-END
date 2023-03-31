@@ -432,7 +432,7 @@ const Controls = () => {
             >
               <LocationDrone lat={droneFlightLtd} lng={droneFlightLng} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} />
               {mapsFlightLtd?.map((lat, idx) => (
-                <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ke-${idx + 1}`} color="yellow" />
+                <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ${idx + 1}`} color="yellow" />
               ))}
             </GoogleMapReact>
           </Stack>
