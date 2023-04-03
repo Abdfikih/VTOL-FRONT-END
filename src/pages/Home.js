@@ -311,38 +311,38 @@ const Home = () => {
     coordinate: [],
   });
 
-  useEffect(() => {
-    const fetchData = async (a) => {
-      try {
-        console.log("masuk fetch");
-        const response = await axios.get(`https://vtol-cigritous-backend.herokuapp.com/updatecoordinate/${a}`);
-        const data = response.data;
+  // useEffect(() => {
+  //   const fetchData = async (a) => {
+  //     try {
+  //       console.log("masuk fetch");
+  //       const response = await axios.get(`https://vtol-cigritous-backend.herokuapp.com/updatecoordinate/${a}`);
+  //       const data = response.data;
 
-        if (data.length !== 0) {
-          setDataCor({
-            node: data.map((item) => item.node),
-            latitude: data.map((item) => item.latitude),
-            longitude: data.map((item) => item.longitude),
-            coordinate: data.map((item) => item.coordinate),
-          });
+  //       if (data.length !== 0) {
+  //         setDataCor({
+  //           node: data.map((item) => item.node),
+  //           latitude: data.map((item) => item.latitude),
+  //           longitude: data.map((item) => item.longitude),
+  //           coordinate: data.map((item) => item.coordinate),
+  //         });
 
-          setMapsFlight((prevArr) => [...prevArr, data.map((item) => JSON.parse(item.coordinate))]);
-          setMapsFlightLtd((prevArr) => [...prevArr, data.map((item) => item.latitude)]);
-          setMapsFlightLng((prevArr) => [...prevArr, data.map((item) => item.longitude)]);
+  //         setMapsFlight((prevArr) => [...prevArr, data.map((item) => JSON.parse(item.coordinate))]);
+  //         setMapsFlightLtd((prevArr) => [...prevArr, data.map((item) => item.latitude)]);
+  //         setMapsFlightLng((prevArr) => [...prevArr, data.map((item) => item.longitude)]);
 
-          console.log("inc : ", a);
-        } else {
-          console.log(`No data returned for ${a}`);
-        }
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
+  //         console.log("inc : ", a);
+  //       } else {
+  //         console.log(`No data returned for ${a}`);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data: ", error);
+  //     }
+  //   };
 
-    for (let a = 1; a <= titik; a++) {
-      fetchData(a);
-    }
-  }, [titik]);
+  //   for (let a = 1; a <= titik; a++) {
+  //     fetchData(a);
+  //   }
+  // }, [titik]);
 
   useEffect(() => {
     console.log("Data Cor : ", mapsFlight[0]);
@@ -599,7 +599,7 @@ const Home = () => {
                 }
               }}
             >
-              <LocationDrone lat={droneFlightLtd} lng={droneFlightLng} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} />
+              {/* <LocationDrone lat={droneFlightLtd} lng={droneFlightLng} text="Drone" color="white" startLat={droneFlightLtd} startLong={droneFlightLng} /> */}
               {mapsFlightLtd?.map((lat, idx) => (
                 <LocationPin lat={lat} lng={mapsFlightLng[idx]} text={`Node ${idx + 1}`} color="yellow" />
               ))}
