@@ -295,10 +295,10 @@ const Controls = () => {
         setDroneProgress(message.toString());
       }
       if (topic === "/drone/lat") {
-        setDroneFlightLtd((message / 10e6).toString());
+        setDroneFlightLtd(message.toString());
       }
       if (topic === "/drone/lng") {
-        setDroneFlightLng((message / 10e6).toString());
+        setDroneFlightLng(message.toString());
       }
       if (topic === "/drone/alt") {
         setDroneAltitude(message.toString());
